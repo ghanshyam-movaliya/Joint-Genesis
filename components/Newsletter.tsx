@@ -67,7 +67,7 @@ export default function Newsletter() {
                   />
                   <button
                     type="submit"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-brand-navy-950 bg-brand-primary-400 hover:bg-brand-primary-300 active:scale-98 transition-all disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-brand-navy-950 bg-brand-primary-400 hover:bg-brand-primary-300 active:scale-98 transition-all disabled:opacity-50 cursor-pointer"
                     disabled={loading}
                   >
                     {loading ? (

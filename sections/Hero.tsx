@@ -104,9 +104,9 @@ export default function Hero() {
               </a>
               <button
                 onClick={() => {
-                  document.getElementById("science-section")?.scrollIntoView({ behavior: "smooth" });
+                  document.getElementById("science")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-brand-navy-700 bg-white hover:bg-brand-navy-100/50 border border-brand-navy-200 shadow-sm transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-brand-navy-700 bg-white hover:bg-brand-navy-100/50 border border-brand-navy-200 shadow-sm transition-all duration-200 cursor-pointer"
               >
                 See the Science
               </button>

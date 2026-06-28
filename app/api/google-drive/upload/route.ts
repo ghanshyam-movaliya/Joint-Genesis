@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadImage, replaceImage } from "@/lib/googleDrive";
+import { getServerSession } from "next-auth/next";
+import { authOptions, ExtendedSession } from "@/lib/auth";
 
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -13,11 +15,20 @@ const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 
 export async function POST(request: NextRequest) {
   try {
+    // 1. Session Authentication
+    const session = (await getServerSession(authOptions)) as ExtendedSession | null;
+    if (!session || !session.accessToken) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Please authenticate via Google first." },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
     const oldFileId = formData.get("oldFileId") as string | null;
 
-    // 1. Validation: File Existence
+    // 2. Validation: File Existence
     if (!file) {
       return NextResponse.json(
         { success: false, error: "No file provided in the upload request." },
@@ -25,7 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Validation: Image Type
+    // 3. Validation: Image Type
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
         {
@@ -36,7 +47,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Validation: File Size
+    // 4. Validation: File Size
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
         {
@@ -47,16 +58,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Process File into Buffer
+    // 5. Process File into Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 5. Upload to Google Drive (and delete old file if replacing)
+    // 6. Upload to Google Drive (and delete old file if replacing)
     let result;
     if (oldFileId) {
-      result = await replaceImage(oldFileId, buffer, file.name, file.type);
+      result = await replaceImage(oldFileId, buffer, file.name, file.type, session.accessToken);
     } else {
-      result = await uploadImage(buffer, file.name, file.type);
+      result = await uploadImage(buffer, file.name, file.type, session.accessToken);
     }
 
     return NextResponse.json({

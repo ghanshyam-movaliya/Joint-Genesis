@@ -95,7 +95,7 @@ export default function ShareButtons({ title }: ShareButtonsProps) {
         {/* Twitter */}
         <button
           onClick={() => handleShare("twitter")}
-          className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-navy-100 text-brand-navy-700 hover:bg-[#1DA1F2] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
+          className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-navy-100 text-brand-navy-700 hover:bg-[#1DA1F2] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm cursor-pointer"
           aria-label="Share on Twitter"
         >
           <Twitter className="w-4 h-4" />
@@ -104,7 +104,7 @@ export default function ShareButtons({ title }: ShareButtonsProps) {
         {/* Facebook */}
         <button
           onClick={() => handleShare("facebook")}
-          className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-navy-100 text-brand-navy-700 hover:bg-[#1877F2] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
+          className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-navy-100 text-brand-navy-700 hover:bg-[#1877F2] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm cursor-pointer"
           aria-label="Share on Facebook"
         >
           <Facebook className="w-4 h-4" />
@@ -113,7 +113,7 @@ export default function ShareButtons({ title }: ShareButtonsProps) {
         {/* LinkedIn */}
         <button
           onClick={() => handleShare("linkedin")}
-          className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-navy-100 text-brand-navy-700 hover:bg-[#0077B5] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
+          className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-navy-100 text-brand-navy-700 hover:bg-[#0077B5] hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm cursor-pointer"
           aria-label="Share on LinkedIn"
         >
           <Linkedin className="w-4 h-4" />
@@ -122,7 +122,7 @@ export default function ShareButtons({ title }: ShareButtonsProps) {
         {/* Copy Link */}
         <button
           onClick={handleCopy}
-          className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-navy-100 text-brand-navy-700 hover:bg-brand-primary-700 hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
+          className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-navy-100 text-brand-navy-700 hover:bg-brand-primary-700 hover:text-white transition-all duration-300 hover:-translate-y-0.5 shadow-sm cursor-pointer"
           aria-label="Copy page link"
         >
           {copied ? <Check className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}

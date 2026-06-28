@@ -1,8 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteImage } from "@/lib/googleDrive";
+import { getServerSession } from "next-auth/next";
+import { authOptions, ExtendedSession } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
+    // 1. Session Authentication
+    const session = (await getServerSession(authOptions)) as ExtendedSession | null;
+    if (!session || !session.accessToken) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Please authenticate via Google first." },
+        { status: 401 }
+      );
+    }
+
     const { fileId } = await request.json();
 
     if (!fileId) {
@@ -12,7 +23,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await deleteImage(fileId);
+    await deleteImage(fileId, session.accessToken);
 
     return NextResponse.json({ success: true });
 

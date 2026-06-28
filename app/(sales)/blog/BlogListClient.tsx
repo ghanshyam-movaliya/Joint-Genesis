@@ -42,7 +42,7 @@ export default function BlogListClient({ initialPosts, categories }: BlogListCli
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all whitespace-nowrap ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all whitespace-nowrap cursor-pointer ${
                   isActive
                     ? "bg-brand-primary-700 text-white shadow-sm"
                     : "bg-brand-navy-50 text-brand-navy-700 hover:bg-brand-navy-100 border border-brand-navy-100/50"

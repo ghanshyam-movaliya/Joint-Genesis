@@ -1,18 +1,16 @@
 import React from "react";
-import { cookies } from "next/headers";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { verifySessionToken } from "@/lib/authHelper";
 import { getSettings } from "@/lib/settingsService";
 import { getSeoSettings } from "@/lib/seoService";
 import SettingsForm from "./SettingsForm";
 
 export default async function AdminSettingsPage() {
-  // Await cookies in Next.js 15
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("jg_admin_session")?.value;
-  const isAuth = sessionCookie ? verifySessionToken(sessionCookie) : false;
+  // Check NextAuth session on server
+  const session = await getServerSession(authOptions);
 
-  if (!isAuth) {
+  if (!session) {
     redirect("/admin");
   }
 

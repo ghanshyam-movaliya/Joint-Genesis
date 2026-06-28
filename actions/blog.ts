@@ -4,6 +4,19 @@ import { revalidatePath } from "next/cache";
 import { createBlog, updateBlog, deleteBlog, Post } from "@/lib/blogService";
 import { updateSettings, WebsiteSettings } from "@/lib/settingsService";
 import { SeoSettings } from "@/lib/seoService";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+
+/**
+ * Validates that the user is authenticated via NextAuth.
+ * Throws an error if they are not.
+ */
+async function requireAuth() {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    throw new Error("Unauthorized. Please sign in via Google OAuth first.");
+  }
+}
 
 /**
  * Server Action to save (create or update) a blog post
@@ -14,6 +27,8 @@ export async function saveBlogAction(
   content: string
 ) {
   try {
+    await requireAuth();
+
     if (id) {
       // Update existing post
       await updateBlog(id, postData, content);
@@ -42,6 +57,8 @@ export async function saveBlogAction(
  */
 export async function deleteBlogAction(id: string, slug: string) {
   try {
+    await requireAuth();
+
     await deleteBlog(id);
 
     // Revalidate paths
@@ -67,6 +84,8 @@ export async function saveSettingsAction(
   seo: SeoSettings
 ) {
   try {
+    await requireAuth();
+
     const mergedSettings: WebsiteSettings = {
       ...settings,
       defaultTitle: seo.defaultTitle,
@@ -93,6 +112,8 @@ export async function saveSettingsAction(
  */
 export async function revalidateCacheAction() {
   try {
+    await requireAuth();
+
     revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {

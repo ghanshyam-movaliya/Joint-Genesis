@@ -1,7 +1,7 @@
 import React from "react";
-import { cookies } from "next/headers";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { verifySessionToken } from "@/lib/authHelper";
 import { getBlogs } from "@/lib/blogService";
 import { getCategories } from "@/lib/categoryService";
 import BlogForm from "@/components/BlogForm";
@@ -13,12 +13,10 @@ interface EditBlogPageProps {
 export default async function EditBlogPage({ params }: EditBlogPageProps) {
   const { id } = await params;
   
-  // Await cookies in Next.js 15
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("jg_admin_session")?.value;
-  const isAuth = sessionCookie ? verifySessionToken(sessionCookie) : false;
+  // Check NextAuth session on server
+  const session = await getServerSession(authOptions);
 
-  if (!isAuth) {
+  if (!session) {
     redirect("/admin");
   }
 

@@ -1,21 +1,20 @@
 import React from "react";
-import { cookies } from "next/headers";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import Link from "next/link";
-import { verifySessionToken } from "@/lib/authHelper";
 import { getBlogs } from "@/lib/blogService";
 import { getCategories } from "@/lib/categoryService";
-import { FileText, Settings, Tags, LogOut } from "lucide-react";
+import { FileText, Settings, Tags } from "lucide-react";
 import RevalidateButton from "./RevalidateButton";
 import AdminLoginForm from "@/components/AdminLoginForm";
+import AdminSignOutButton from "@/components/AdminSignOutButton";
 
 export default async function AdminPage() {
-  // Await cookies in Next.js 15
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("jg_admin_session")?.value;
-  const isAuth = sessionCookie ? verifySessionToken(sessionCookie) : false;
+  // Check NextAuth session on server
+  const session = await getServerSession(authOptions);
 
-  // Render Password Login Panel if session is not authenticated
-  if (!isAuth) {
+  // Render Login Panel if session is not authenticated
+  if (!session) {
     return <AdminLoginForm />;
   }
 
@@ -40,22 +39,16 @@ export default async function AdminPage() {
               Management Dashboard
             </span>
             <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-brand-navy-900 tracking-tight leading-tight">
-              Welcome back, Admin
+              Welcome back, {session.user?.name || "Admin"}
             </h1>
             <p className="text-xs text-brand-navy-500 font-semibold mt-1">
-              Hashed session active | <span className="text-brand-primary-700">JSON Storage Layer</span>
+              Google Session active | <span className="text-brand-primary-700">JSON Storage Layer</span>
             </p>
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
             <RevalidateButton />
-            <a
-              href="/api/auth/logout"
-              className="inline-flex items-center gap-1.5 px-4 py-2 border border-red-200 rounded-xl bg-white hover:bg-red-50 text-xs font-bold text-red-600 hover:text-red-700 transition-colors shadow-sm"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              Sign Out
-            </a>
+            <AdminSignOutButton />
           </div>
         </div>
 

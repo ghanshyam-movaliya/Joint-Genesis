@@ -1,29 +1,20 @@
-import { google } from "googleapis";
+import { google, drive_v3 } from "googleapis";
 import { Readable } from "stream";
 
-const SCOPES = ["https://www.googleapis.com/auth/drive"];
-
 /**
- * Get authenticated Google Drive API Client instance
+ * Get authenticated Google Drive API Client instance using User's OAuth Access Token
  */
-async function getDriveClient() {
-  const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-  // Replace escaped newlines with real newlines for service account key config
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+function getDriveClient(accessToken: string) {
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET
+  );
 
-  if (!clientEmail || !privateKey) {
-    throw new Error(
-      "Missing Google Drive credentials. Please ensure GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY are set."
-    );
-  }
-
-  const auth = new google.auth.JWT({
-    email: clientEmail,
-    key: privateKey,
-    scopes: SCOPES,
+  oauth2Client.setCredentials({
+    access_token: accessToken,
   });
 
-  return google.drive({ version: "v3", auth });
+  return google.drive({ version: "v3", auth: oauth2Client });
 }
 
 /**
@@ -45,20 +36,60 @@ export function getPublicImageUrl(fileId: string): string {
 }
 
 /**
- * Upload an image buffer to the configured Google Drive folder
+ * Search for or automatically create the "Joint Genesis Images" folder
+ */
+async function getOrCreateFolder(drive: drive_v3.Drive): Promise<string> {
+  const folderName = "Joint Genesis Images";
+
+  try {
+    // 1. Search for folder name
+    const response = await drive.files.list({
+      q: `name = '${folderName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+      fields: "files(id)",
+      spaces: "drive",
+    });
+
+    const files = response.data.files;
+    if (files && files.length > 0 && files[0].id) {
+      return files[0].id;
+    }
+
+    // 2. Folder not found: create it
+    const folderMetadata = {
+      name: folderName,
+      mimeType: "application/vnd.google-apps.folder",
+    };
+
+    const folder = await drive.files.create({
+      requestBody: folderMetadata,
+      fields: "id",
+    });
+
+    if (!folder.data.id) {
+      throw new Error("Failed to retrieve new folder ID from Google Drive response.");
+    }
+
+    return folder.data.id;
+  } catch (error) {
+    console.error("Failed to check/create Joint Genesis Images folder:", error);
+    throw new Error(`Google Drive folder setup failed: ${(error as { message?: string }).message || error}`);
+  }
+}
+
+/**
+ * Upload an image buffer to the "Joint Genesis Images" folder
  */
 export async function uploadImage(
   fileBuffer: Buffer,
   fileName: string,
-  mimeType: string
+  mimeType: string,
+  accessToken: string
 ): Promise<{ fileId: string; publicUrl: string }> {
   try {
-    const drive = await getDriveClient();
-    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+    const drive = getDriveClient(accessToken);
 
-    if (!folderId) {
-      throw new Error("Missing Google Drive folder ID. Please set GOOGLE_DRIVE_FOLDER_ID.");
-    }
+    // 1. Get or create target parent folder
+    const folderId = await getOrCreateFolder(drive);
 
     const fileMetadata = {
       name: fileName,
@@ -70,7 +101,7 @@ export async function uploadImage(
       body: bufferToStream(fileBuffer),
     };
 
-    // 1. Upload the file to Google Drive
+    // 2. Upload file to Google Drive
     const response = await drive.files.create({
       requestBody: fileMetadata,
       media: media,
@@ -82,7 +113,7 @@ export async function uploadImage(
       throw new Error("Google Drive upload succeeded but failed to return a file ID.");
     }
 
-    // 2. Make the file publicly readable by anyone
+    // 3. Make file publicly readable
     await drive.permissions.create({
       fileId: fileId,
       requestBody: {
@@ -91,7 +122,7 @@ export async function uploadImage(
       },
     });
 
-    // 3. Return the file details and direct public URL
+    // 4. Return direct viewing URL
     const publicUrl = getPublicImageUrl(fileId);
     return { fileId, publicUrl };
 
@@ -104,11 +135,11 @@ export async function uploadImage(
 /**
  * Delete a file from Google Drive by ID
  */
-export async function deleteImage(fileId: string): Promise<void> {
+export async function deleteImage(fileId: string, accessToken: string): Promise<void> {
   if (!fileId) return;
 
   try {
-    const drive = await getDriveClient();
+    const drive = getDriveClient(accessToken);
     await drive.files.delete({
       fileId: fileId,
     });
@@ -129,15 +160,16 @@ export async function replaceImage(
   oldFileId: string | null,
   fileBuffer: Buffer,
   fileName: string,
-  mimeType: string
+  mimeType: string,
+  accessToken: string
 ): Promise<{ fileId: string; publicUrl: string }> {
   // 1. Upload new image
-  const uploadResult = await uploadImage(fileBuffer, fileName, mimeType);
+  const uploadResult = await uploadImage(fileBuffer, fileName, mimeType, accessToken);
 
   // 2. Delete old image if provided
   if (oldFileId) {
     try {
-      await deleteImage(oldFileId);
+      await deleteImage(oldFileId, accessToken);
     } catch (error) {
       console.warn(`Failed to delete old image file ${oldFileId}:`, error);
       // Don't fail the upload task if deleting the old file fails

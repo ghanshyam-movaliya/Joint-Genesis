@@ -38,6 +38,8 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://en-jointgenesis.com"),
 };
 
+import SessionProvider from "@/components/SessionProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -49,7 +51,9 @@ export default function RootLayout({
       className={`${outfit.variable} ${inter.variable} h-full scroll-smooth antialiased`}
     >
       <body className="font-sans min-h-full flex flex-col text-brand-navy-900 bg-brand-navy-50">
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

@@ -52,11 +52,11 @@ export default function SupplementFacts() {
             </div>
 
             {/* Quality badges */}
-            <div className="flex gap-5 items-center mt-6">
+            <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start text-center sm:text-left mt-6">
               <img 
                 src="/images/joint genesis-image/Joint Genesis Supplement Facts/cGMP_symbol.png" 
                 alt="cGMP Certified Symbol" 
-                className="w-56 h-auto object-contain shrink-0 drop-shadow-sm"
+                className="w-40 sm:w-56 h-auto object-contain shrink-0 drop-shadow-sm"
               />
               <div>
                 <h5 className="font-display font-extrabold text-sm text-brand-navy-900 uppercase tracking-wider">cGMP Certified Quality</h5>

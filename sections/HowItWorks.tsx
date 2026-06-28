@@ -101,7 +101,7 @@ export default function HowItWorks() {
           </div>
           <a
             href="#pricing"
-            className="relative z-10 inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl transition-all hover:-translate-y-0.5 active:scale-98"
+            className="relative z-10 inline-flex items-center gap-2 px-5 sm:px-8 py-4 rounded-2xl text-xs sm:text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl transition-all hover:-translate-y-0.5 active:scale-98 whitespace-nowrap cursor-pointer"
           >
             GET JOINT GENESIS NOW!
             <ArrowRight className="w-5 h-5" />
