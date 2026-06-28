@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheck, Heart, Sparkles, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, Heart, CheckCircle2 } from "lucide-react";
 
 export default function WhatIsJointGenesis() {
   const badges = ["Non-GMO", "Gluten Free", "Dairy Free", "Soy Free", "Nut Free"];
@@ -47,29 +47,14 @@ export default function WhatIsJointGenesis() {
           <div className="lg:col-span-5 flex flex-col gap-8">
             
             {/* Visual Graphic Representation */}
-            <div className="relative bg-gradient-to-tr from-brand-navy-50 to-brand-primary-50 border border-brand-navy-100 rounded-[40px] p-8 shadow-sm flex flex-col justify-center items-center overflow-hidden min-h-[300px]">
-              {/* Abstract structural joint lines */}
+            <div className="relative bg-gradient-to-tr from-brand-navy-50 to-brand-primary-50 border border-brand-navy-100 rounded-[40px] p-6 shadow-sm flex justify-center items-center overflow-hidden min-h-[300px]">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/60 via-transparent to-transparent pointer-events-none" />
               
-              {/* Dynamic Graphic */}
-              <div className="relative flex flex-col items-center gap-4 text-center">
-                <div className="w-24 h-24 rounded-full bg-white border border-brand-primary-200 flex items-center justify-center shadow-md animate-pulse">
-                  <Sparkles className="w-10 h-10 text-brand-primary-600" />
-                </div>
-                <div>
-                  <h4 className="font-display font-black text-brand-navy-900 tracking-tight text-lg">
-                    Synovial Gel Buffer
-                  </h4>
-                  <p className="text-[11px] text-brand-navy-500 font-bold uppercase tracking-wider mt-1">
-                    Cushions Joint Membranes
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <span className="h-1.5 w-6 bg-brand-primary-600 rounded-full" />
-                  <span className="h-1.5 w-1.5 bg-brand-primary-400 rounded-full animate-bounce" />
-                  <span className="h-1.5 w-1.5 bg-brand-primary-200 rounded-full" />
-                </div>
-              </div>
+              <img
+                src="/images/joint genesis-image/What Is Joint Genesis/bottle joint geneis.webp"
+                alt="Joint Genesis Bottle"
+                className="max-h-[280px] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300"
+              />
             </div>
 
             {/* Special Highlighted Box Area 2 */}
@@ -77,6 +62,15 @@ export default function WhatIsJointGenesis() {
               <p className="text-xs sm:text-sm text-brand-navy-700 leading-relaxed font-medium">
                 With its plant-based, non-GMO, and carefully tested ingredients, Joint Genesis offers more than just temporary relief. It provides complete joint nourishment, protecting against age-related decline and empowering you to enjoy an active, pain-free lifestyle at any stage of life.
               </p>
+            </div>
+
+            {/* Ingredients Summary Banner */}
+            <div className="w-full border border-brand-navy-100 rounded-[28px] overflow-hidden shadow-sm bg-white p-2 flex justify-center">
+              <img 
+                src="/images/joint genesis-image/What Is Joint Genesis/Key-Ingredients-In-Joint-Genesis-1.png" 
+                alt="Key Ingredients in Joint Genesis" 
+                className="w-full h-auto object-contain rounded-2xl"
+              />
             </div>
 
             {/* 5 Badges / Buttons row */}

@@ -69,6 +69,24 @@ export default function Science() {
                 As we age, the body may produce lower amounts of hyaluronan, a naturally occurring substance that helps keep joint fluid thick, cushioning, and effective. When lubrication levels decline, joints can experience increased friction, reduced flexibility, and greater stress during daily activities.
               </p>
             </div>
+
+            {/* Science Diagrams */}
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-white border border-brand-navy-100 rounded-3xl p-3 flex justify-center items-center shadow-sm">
+                <img 
+                  src="/images/joint genesis-image/The Science Behind Joint Genesis/daigrma joint genesis.webp" 
+                  alt="Joint lubrication diagram" 
+                  className="rounded-2xl max-h-[180px] w-auto object-contain hover:scale-102 transition-transform duration-300"
+                />
+              </div>
+              <div className="bg-white border border-brand-navy-100 rounded-3xl p-3 flex justify-center items-center shadow-sm">
+                <img 
+                  src="/images/joint genesis-image/The Science Behind Joint Genesis/diagram.jpg" 
+                  alt="Synovial fluid research diagram" 
+                  className="rounded-2xl max-h-[180px] w-auto object-contain hover:scale-102 transition-transform duration-300"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Right Column: 4 Boxes Graphic & Action */}

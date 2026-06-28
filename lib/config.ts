@@ -14,17 +14,17 @@ export const CONFIG = {
   // Pricing Packages
   packages: [
     {
-      id: "1-bottle",
-      name: "1 Bottle",
-      supply: "30-Day Supply",
+      id: "2-bottles",
+      name: "2 Bottles",
+      supply: "60-Day Supply",
       pricePerBottle: 59,
-      originalPrice: 129,
-      totalPrice: 59,
+      originalPrice: 258,
+      totalPrice: 118,
       shipping: "9.95 Shipping",
       shippingFee: 9.95,
       popular: false,
       bestValue: false,
-      savings: 70,
+      savings: 140,
       description: "Perfect for testing the formula and feeling initial joint stiffness relief.",
       bonuses: []
     },
@@ -80,7 +80,7 @@ export const CONFIG = {
         "Reduces joint discomfort and swelling",
         "Improves muscle strength and joint mobility"
       ],
-      image: "/ingredients/mobilee.webp"
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/Mobilee®-Patented-Complex.png"
     },
     {
       id: "pine-bark",
@@ -94,7 +94,7 @@ export const CONFIG = {
         "Supports healthy circulation and blood flow to joint tissues",
         "Shown to improve joint flex and ease walking distances in clinical studies"
       ],
-      image: "/ingredients/pine-bark.webp"
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/French-Maritime-Pine-Bark.png"
     },
     {
       id: "ginger-root",
@@ -108,7 +108,7 @@ export const CONFIG = {
         "Enhances absorption of other key active ingredients",
         "Reduces morning joint stiffness and enhances recovery"
       ],
-      image: "/ingredients/ginger.webp"
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/Ginger-Root-Extract.png"
     },
     {
       id: "boswellia-serrata",
@@ -122,7 +122,7 @@ export const CONFIG = {
         "Relieves discomfort during weight-bearing activities",
         "Improves physical function and joint flexion"
       ],
-      image: "/ingredients/boswellia.webp"
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/Boswellia-Serrata-Extract.png"
     },
     {
       id: "bioperine",
@@ -136,7 +136,7 @@ export const CONFIG = {
         "Maximizes the clinical efficacy of the formula",
         "Ensures nutrients survive digestive acids and reach the bloodstream"
       ],
-      image: "/ingredients/bioperine.webp"
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/BioPerine®-Black-Pepper-Extract.png"
     }
   ],
 

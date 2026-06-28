@@ -11,27 +11,14 @@ export default function Guarantee() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Shield Graphic */}
           <div className="lg:col-span-4 flex justify-center">
-            {/* Custom CSS Gold Shield Badge */}
+            {/* Guarantee Badge Image */}
             <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
               <div className="absolute inset-0 bg-brand-accent-600/10 blur-xl rounded-full animate-pulse" />
-              {/* Outer circle */}
-              <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full border-4 border-dashed border-brand-accent-500 flex items-center justify-center p-2">
-                {/* Inner badge */}
-                <div className="w-full h-full rounded-full bg-gradient-to-b from-brand-accent-500 to-brand-accent-700 flex flex-col items-center justify-center text-center text-white shadow-xl border border-brand-accent-400">
-                  <span className="text-[10px] font-black tracking-widest uppercase">
-                    100% SECURE
-                  </span>
-                  <span className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-none my-1.5">
-                    180
-                  </span>
-                  <span className="text-[11px] font-black uppercase tracking-wider leading-none">
-                    DAY
-                  </span>
-                  <span className="text-[9px] font-bold text-brand-accent-100 uppercase tracking-widest mt-1">
-                    Guarantee
-                  </span>
-                </div>
-              </div>
+              <img
+                src="/images/joint genesis-image/Your Mobility Guaranteed For 180 FULL DAYS/guarantee-badge-180-days.webp"
+                alt="180 Day Money Back Guarantee"
+                className="w-full h-full object-contain relative z-10 drop-shadow-xl hover:scale-105 transition-transform duration-300"
+              />
             </div>
           </div>
 

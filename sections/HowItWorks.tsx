@@ -1,29 +1,29 @@
 "use client";
 
 import React from "react";
-import { ArrowRight, RefreshCw, Zap, Eye, Heart } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function HowItWorks() {
   const steps = [
     {
       title: "Rebuilds Hyaluronan Levels Inside the Joints",
       description: "Hyaluronan is an essential component of healthy joints that naturally declines with age. Joint Genesis™ is formulated to support the body's natural production of this important compound, helping maintain joint lubrication, flexibility, and overall joint health for comfortable daily movement.",
-      icon: <RefreshCw className="w-6 h-6 text-brand-primary-700" />
+      image: "/images/joint genesis-image/How Is Joint Genesis Supposed to Work/Rebuilds-Hyaluronan-Levels-Inside-the-Joints.jpg"
     },
     {
       title: "Rehydrates and Thickens Synovial Fluid",
       description: "Synovial fluid acts as the body's natural joint lubricant, helping joints move smoothly and comfortably. By supporting healthy fluid quality and hydration, Joint Genesis™ helps promote better cushioning and mobility throughout everyday activities.",
-      icon: <Zap className="w-6 h-6 text-brand-primary-700" />
+      image: "/images/joint genesis-image/How Is Joint Genesis Supposed to Work/Rehydrates-and-Thickens-Synovial-Fluid.jpg"
     },
     {
       title: "Nourishes Cartilage and Joint Tissues",
       description: "Healthy cartilage and connective tissues play a vital role in joint function. Joint Genesis™ provides targeted nutritional support to help nourish these structures, promoting long-term joint wellness, flexibility, and active living.",
-      icon: <Eye className="w-6 h-6 text-brand-primary-700" />
+      image: "/images/joint genesis-image/How Is Joint Genesis Supposed to Work/Nourishes-Cartilage-and-Joint-Tissues.jpg"
     },
     {
       title: "Supports a Healthy Inflammatory Response",
       description: "Occasional joint stiffness can affect comfort and mobility. With carefully selected ingredients, Joint Genesis™ helps support a healthy inflammatory response, promoting joint comfort and helping you stay active with confidence.",
-      icon: <Heart className="w-6 h-6 text-brand-primary-700" />
+      image: "/images/joint genesis-image/How Is Joint Genesis Supposed to Work/Supports-a-Healthy-Inflammatory-Response.jpg"
     }
   ];
 
@@ -64,16 +64,18 @@ export default function HowItWorks() {
           {steps.map((step, idx) => (
             <div 
               key={idx}
-              className="bg-white border border-brand-navy-100 rounded-3xl p-8 flex gap-6 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group"
+              className="bg-white border border-brand-navy-100 rounded-3xl p-6 sm:p-8 flex gap-6 shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group"
             >
               {/* Decorative Number */}
               <div className="absolute top-4 right-6 font-display font-black text-5xl text-brand-navy-100/50 group-hover:text-brand-primary-100 transition-colors">
                 {`0${idx + 1}`}
               </div>
 
-              <div className="w-12 h-12 rounded-2xl bg-brand-primary-50 flex items-center justify-center shrink-0 shadow-sm">
-                {step.icon}
-              </div>
+              <img
+                src={step.image}
+                alt={step.title}
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border border-brand-navy-100 shadow-sm shrink-0 relative z-10"
+              />
               <div className="flex flex-col gap-2 relative z-10">
                 <h4 className="font-display font-extrabold text-base sm:text-lg text-brand-navy-900 leading-tight">
                   {step.title}

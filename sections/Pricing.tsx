@@ -71,6 +71,21 @@ export default function Pricing() {
                   <span className="inline-flex px-2.5 py-0.5 rounded bg-brand-navy-100 text-brand-navy-700 text-[10px] font-bold uppercase tracking-wider mt-1.5">
                     {pkg.supply}
                   </span>
+
+                  {/* Package Bottle Image */}
+                  <div className="my-4 flex justify-center items-center h-28 w-full">
+                    <img 
+                      src={
+                        pkg.id === "2-bottles" 
+                          ? "/images/joint genesis-image/Limited Time Special Offer - Act Now !/2-pack.png" 
+                          : pkg.id === "3-bottles" 
+                          ? "/images/joint genesis-image/Limited Time Special Offer - Act Now !/3-pack.png" 
+                          : "/images/joint genesis-image/Limited Time Special Offer - Act Now !/6-pack.png"
+                      } 
+                      alt={pkg.name} 
+                      className="h-full object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
+                    />
+                  </div>
                   
                   {/* Price display */}
                   <div className="mt-5 flex items-baseline justify-center gap-1">

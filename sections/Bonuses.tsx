@@ -8,14 +8,12 @@ export default function Bonuses() {
     {
       title: "17 Joint Supporting Smoothies",
       tagline: "Delicious breakfast recipes designed to reduce inflammation naturally.",
-      bg: "from-emerald-600 to-teal-800",
-      icon: "🥤"
+      image: "/images/joint genesis-image/Get 2 FREE Digital Bonuses/ebook_1 new 1 jg.webp"
     },
     {
       title: "Youthful Joints For Life",
       tagline: "The 5-minute morning routine to keep your joints lubricated all day.",
-      bg: "from-brand-primary-700 to-brand-primary-900",
-      icon: "🧘"
+      image: "/images/joint genesis-image/Get 2 FREE Digital Bonuses/ebook_2 (1) jg.webp"
     }
   ];
 
@@ -57,6 +55,24 @@ export default function Bonuses() {
                 <ArrowRight className="w-5 h-5" />
               </a>
             </div>
+
+            {/* Visual Ebooks Group Photos */}
+            <div className="mt-6 flex flex-wrap gap-4 max-w-lg">
+              <div className="border border-brand-navy-100 rounded-3xl p-3 bg-brand-navy-50/50 flex justify-center items-center shadow-sm w-[200px] shrink-0">
+                <img 
+                  src="/images/joint genesis-image/Get 2 FREE Digital Bonuses/Exclusive-Bonuses-with-Joint-Genesis-copy.png" 
+                  alt="Joint Genesis Exclusive Bonuses Banner" 
+                  className="rounded-2xl max-h-[140px] object-contain hover:scale-102 transition-transform duration-300"
+                />
+              </div>
+              <div className="border border-brand-navy-100 rounded-3xl p-3 bg-brand-navy-50/50 flex justify-center items-center shadow-sm w-[200px] shrink-0">
+                <img 
+                  src="/images/joint genesis-image/Get 2 FREE Digital Bonuses/bonus.png" 
+                  alt="Joint Genesis Ebooks Pack" 
+                  className="rounded-2xl max-h-[140px] object-contain hover:scale-102 transition-transform duration-300"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Beautiful Visual Ebook Mockups */}
@@ -66,30 +82,17 @@ export default function Bonuses() {
                 key={idx}
                 className="bg-brand-navy-50/50 border border-brand-navy-100 rounded-3xl p-6 flex flex-col gap-6 items-center shadow-sm relative group hover:shadow-md transition-all duration-300"
               >
-                {/* 3D-like Book Cover mockup using pure CSS gradients */}
-                <div className={`w-40 h-56 rounded-r-2xl bg-gradient-to-br ${bonus.bg} shadow-lg relative overflow-hidden flex flex-col justify-between p-4 text-white border-l-4 border-black/20 group-hover:scale-102 transition-transform duration-300`}>
-                  {/* Purity shine shine */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-transparent" />
-                  
-                  <div className="flex justify-between items-center relative z-10">
-                    <span className="text-[9px] font-black tracking-widest uppercase bg-white/20 px-2 py-0.5 rounded">
-                      Ebook
-                    </span>
-                    <span className="text-xl">{bonus.icon}</span>
-                  </div>
-
-                  <div className="relative z-10 my-auto text-center">
-                    <h3 className="font-display font-black text-sm sm:text-base leading-tight tracking-tight drop-shadow-md">
-                      {bonus.title}
-                    </h3>
-                  </div>
-
-                  <div className="relative z-10 border-t border-white/20 pt-2 flex justify-between items-center text-[9px] font-black tracking-wider uppercase">
-                    <span>Joint Genesis™</span>
-                    <span className="bg-brand-accent-600 px-1.5 py-0.5 rounded text-white font-bold">
-                      FREE
-                    </span>
-                  </div>
+                {/* Book Cover Image */}
+                <div className="w-40 h-56 rounded-2xl shadow-lg relative overflow-hidden group-hover:scale-102 transition-transform duration-300 border border-brand-navy-100 bg-white">
+                  <img
+                    src={bonus.image}
+                    alt={bonus.title}
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
+                  {/* Floating FREE Badge */}
+                  <span className="absolute top-2 right-2 bg-brand-accent-600 border border-brand-accent-500 px-2 py-0.5 rounded text-[9px] font-black tracking-widest text-white shadow-sm">
+                    FREE
+                  </span>
                 </div>
 
                 <div className="text-center flex flex-col gap-1.5">

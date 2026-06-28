@@ -6,27 +6,33 @@ export default function Ingredients() {
   const ingredients = [
     {
       name: "Mobilee® (Patented Complex)",
-      description: "Mobilee® helps support joint lubrication, joint flexibility, and healthy mobility by promoting the natural cushioning system within the joints. This patented complex is designed to help maintain smooth, comfortable movement and long-term joint wellness."
+      description: "Mobilee® helps support joint lubrication, joint flexibility, and healthy mobility by promoting the natural cushioning system within the joints. This patented complex is designed to help maintain smooth, comfortable movement and long-term joint wellness.",
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/Mobilee®-Patented-Complex.png"
     },
     {
       name: "French Maritime Pine Bark",
-      description: "French Maritime Pine Bark provides powerful antioxidants that support joint health and overall wellness. It helps protect cells from oxidative stress while promoting an active, healthy lifestyle."
+      description: "French Maritime Pine Bark provides powerful antioxidants that support joint health and overall wellness. It helps protect cells from oxidative stress while promoting an active, healthy lifestyle.",
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/French-Maritime-Pine-Bark.png"
     },
     {
       name: "Ginger Root Extract",
-      description: "Ginger Root Extract is known for supporting joint comfort, flexibility, and a healthy inflammatory response. It helps maintain everyday mobility so you can stay active with confidence."
+      description: "Ginger Root Extract is known for supporting joint comfort, flexibility, and a healthy inflammatory response. It helps maintain everyday mobility so you can stay active with confidence.",
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/Ginger-Root-Extract.png"
     },
     {
       name: "Boswellia Serrata Extract",
-      description: "Boswellia Serrata is a traditional herbal ingredient that supports joint mobility, flexibility, and physical comfort. It helps promote healthy movement and long-term joint support."
+      description: "Boswellia Serrata is a traditional herbal ingredient that supports joint mobility, flexibility, and physical comfort. It helps promote healthy movement and long-term joint support.",
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/Boswellia-Serrata-Extract.png"
     },
     {
       name: "BioPerine® (Black Pepper Extract)",
-      description: "BioPerine® enhances nutrient absorption, helping the body maximize the benefits of important joint support ingredients. This improves the overall effectiveness of the formula."
+      description: "BioPerine® enhances nutrient absorption, helping the body maximize the benefits of important joint support ingredients. This improves the overall effectiveness of the formula.",
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/BioPerine®-Black-Pepper-Extract.png"
     },
     {
       name: "Hyaluronic Acid Support Nutrients",
-      description: "These nutrients help maintain joint hydration, cushioning, and lubrication for smoother movement. Healthy levels of hyaluronic acid are important for joint flexibility, comfort, and mobility."
+      description: "These nutrients help maintain joint hydration, cushioning, and lubrication for smoother movement. Healthy levels of hyaluronic acid are important for joint flexibility, comfort, and mobility.",
+      image: "/images/joint genesis-image/Joint Genesis Ingredients/Hyaluronic-Acid-Support-Nutrients.png"
     }
   ];
 
@@ -61,11 +67,20 @@ export default function Ingredients() {
           {ingredients.map((ing, idx) => (
             <div 
               key={idx}
-              className="bg-white border border-brand-navy-100 rounded-3xl p-6 sm:p-8 flex flex-col gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden"
+              className="bg-white border border-brand-navy-100 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden"
             >
-              {/* Decorative Circle Icon */}
-              <div className="w-10 h-10 rounded-xl bg-brand-primary-50 flex items-center justify-center text-brand-primary-700 font-display font-black text-sm shrink-0">
-                {idx + 1}
+              {/* Ingredient Image Thumbnail */}
+              <div className="relative w-full h-44 rounded-2xl bg-brand-navy-50/50 border border-brand-navy-100/50 overflow-hidden flex justify-center items-center">
+                <img
+                  src={ing.image}
+                  alt={ing.name}
+                  className="h-36 w-auto object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
+                />
+                
+                {/* Number Badge overlay */}
+                <span className="absolute top-3 left-3 bg-brand-primary-700 text-white font-black text-xs px-2.5 py-1 rounded-lg">
+                  {idx + 1}
+                </span>
               </div>
 
               <div className="flex flex-col gap-2">

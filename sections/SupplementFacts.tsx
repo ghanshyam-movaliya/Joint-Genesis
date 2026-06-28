@@ -50,10 +50,23 @@ export default function SupplementFacts() {
                 </p>
               </div>
             </div>
+
+            {/* Quality badges */}
+            <div className="flex gap-5 items-center mt-6">
+              <img 
+                src="/images/joint genesis-image/Joint Genesis Supplement Facts/cGMP_symbol.png" 
+                alt="cGMP Certified Symbol" 
+                className="w-56 h-auto object-contain shrink-0 drop-shadow-sm"
+              />
+              <div>
+                <h5 className="font-display font-extrabold text-sm text-brand-navy-900 uppercase tracking-wider">cGMP Certified Quality</h5>
+                <p className="text-xs text-brand-navy-500 mt-1 leading-relaxed max-w-[280px]">Strict Good Manufacturing Practice regulations certified facility.</p>
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Supplement Facts Panel */}
-          <div className="lg:col-span-6 flex justify-center">
+          <div className="lg:col-span-6 flex flex-col gap-6 items-center w-full">
             
             {/* Supplement Facts Card */}
             <div className="w-full max-w-md bg-white border-4 border-black p-6 font-sans text-black shadow-lg">
@@ -96,6 +109,15 @@ export default function SupplementFacts() {
               <div className="border-t border-black mt-2 pt-2 text-[9px] text-gray-600 italic leading-snug">
                 Distributed by BioDynamix. Mobilee® is a registered trademark of Bioiberica S.A.U. BioPerine® is a registered trademark of Sabinsa Corporation.
               </div>
+            </div>
+
+            {/* Actual Supplement Label Image */}
+            <div className="w-full max-w-md bg-brand-navy-50/50 border border-brand-navy-100 rounded-3xl p-4 flex justify-center shadow-sm">
+              <img 
+                src="/images/joint genesis-image/Joint Genesis Supplement Facts/label_jointgenesis.jpg" 
+                alt="Joint Genesis Supplement Facts Label" 
+                className="rounded-2xl max-h-[220px] w-auto object-contain shadow-sm border border-brand-navy-100/40"
+              />
             </div>
 
           </div>

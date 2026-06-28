@@ -137,68 +137,26 @@ export default function Hero() {
           </motion.div>
 
           {/* Right Column: Premium Bottle mockup container */}
+          {/* Right Column: Premium Bottle mockup container */}
           <motion.div 
             className="lg:col-span-5 flex justify-center lg:justify-end"
             initial={{ opacity: 0, scale: 0.9, x: 20 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ type: "spring", stiffness: 80, delay: 0.3 }}
           >
-            {/* Styled dynamic CSS Bottle representation with glowing ambient lighting */}
-            <div className="relative w-72 h-[420px] sm:w-80 sm:h-[460px] flex items-center justify-center">
+            <div className="relative w-full max-w-[420px] flex items-center justify-center">
               {/* Radial glow background */}
-              <div className="absolute inset-0 bg-brand-primary-600/10 blur-2xl rounded-full scale-90 pointer-events-none" />
-
-              {/* Actual 3D-like container */}
-              <div className="relative w-64 h-96 sm:w-72 sm:h-[400px] bg-gradient-to-b from-brand-primary-900 via-brand-primary-950 to-brand-navy-950 rounded-[40px] shadow-2xl border-4 border-brand-primary-800 p-1 flex flex-col justify-between items-center overflow-hidden">
-                {/* Bottle Cap */}
-                <div className="w-32 h-6 bg-gradient-to-r from-brand-primary-700 via-brand-primary-600 to-brand-primary-700 rounded-t-lg -mt-3 shadow-md" />
-
-                {/* Bottle Label Area */}
-                <div className="w-full flex-1 mt-4 px-4 py-6 bg-white flex flex-col items-center justify-between text-center relative border-y border-brand-primary-800">
-                  {/* Subtle label background leaves */}
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-primary-50 via-white to-white opacity-90 pointer-events-none" />
-
-                  {/* Brand text on label */}
-                  <div className="relative z-10 w-full flex flex-col items-center">
-                    <span className="text-[10px] font-black text-brand-primary-700 tracking-widest uppercase">
-                      BioDynamix
-                    </span>
-                    <h2 className="font-display font-extrabold text-2xl text-brand-navy-900 tracking-tight mt-1 leading-none">
-                      Joint Genesis<span className="text-brand-primary-600">™</span>
-                    </h2>
-                    <div className="h-0.5 w-12 bg-brand-primary-500 my-2 mx-auto" />
-                    <p className="text-[9px] text-brand-primary-800 font-bold uppercase tracking-wider">
-                      Advanced Joint Health Formula
-                    </p>
-                  </div>
-
-                  {/* Icon on label */}
-                  <div className="relative z-10 w-16 h-16 rounded-full bg-brand-primary-50 border border-brand-primary-200 flex items-center justify-center my-3">
-                    <Activity className="w-8 h-8 text-brand-primary-700" />
-                  </div>
-
-                  {/* Dosage text on label */}
-                  <div className="relative z-10 w-full">
-                    <div className="inline-flex px-2.5 py-0.5 rounded bg-brand-navy-900 text-white text-[9px] font-black tracking-widest uppercase mb-1.5">
-                      Doctor Formulated
-                    </div>
-                    <div className="flex justify-center gap-6 text-[9px] font-bold text-brand-navy-500">
-                      <span>Dietary Supplement</span>
-                      <span>•</span>
-                      <span>30 Vegetarian Capsules</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Lower bottle details */}
-                <div className="h-6 w-full flex items-center justify-center">
-                  <div className="h-1.5 w-12 bg-white/20 rounded-full" />
-                </div>
-              </div>
+              <div className="absolute inset-0 bg-brand-primary-600/10 blur-3xl rounded-full scale-90 pointer-events-none" />
+              
+              <img
+                src="/images/joint genesis-image/MAIN HEADING (HERO SECTION)/hero.png"
+                alt="Joint Genesis supplement bottles"
+                className="w-full h-auto object-contain relative z-10 drop-shadow-2xl hover:scale-102 transition-transform duration-300"
+              />
 
               {/* Bonus badges floating */}
               <motion.div
-                className="absolute -top-4 -right-4 bg-brand-accent-600 text-white font-black text-[10px] uppercase tracking-widest py-2 px-3 rounded-2xl shadow-lg border border-brand-accent-500 flex flex-col items-center leading-none"
+                className="absolute -top-4 right-0 bg-brand-accent-600 text-white font-black text-[10px] uppercase tracking-widest py-2 px-3 rounded-2xl shadow-lg border border-brand-accent-500 flex flex-col items-center leading-none z-20"
                 animate={{ y: [0, -5, 0] }}
                 transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
               >
@@ -207,7 +165,7 @@ export default function Hero() {
               </motion.div>
 
               <motion.div
-                className="absolute -bottom-2 -left-6 bg-white text-brand-navy-900 font-bold text-[10px] py-2 px-3 rounded-2xl shadow-lg border border-brand-navy-100 flex items-center gap-1.5"
+                className="absolute -bottom-2 left-0 bg-white text-brand-navy-900 font-bold text-[10px] py-2 px-3 rounded-2xl shadow-lg border border-brand-navy-100 flex items-center gap-1.5 z-20"
                 animate={{ y: [0, 5, 0] }}
                 transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
               >
@@ -222,22 +180,4 @@ export default function Hero() {
   );
 }
 
-// Small inline helper component to fix TypeScript error for Activity icon
-function Activity(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-    </svg>
-  );
-}
+
