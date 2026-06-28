@@ -1,0 +1,335 @@
+"use client";
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Loader2, Save } from "lucide-react";
+import Link from "next/link";
+import { Post } from "@/lib/blogService";
+import { saveBlogAction } from "@/actions/blog";
+import ImageUploader from "@/components/ImageUploader";
+
+interface BlogFormProps {
+  post?: Post | null; // Null if creating new blog
+  categories: string[];
+}
+
+export default function BlogForm({ post, categories }: BlogFormProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Form Fields State
+  const [title, setTitle] = useState(post?.title || "");
+  const [slug, setSlug] = useState(post?.slug || "");
+  const [category, setCategory] = useState(post?.categories[0] || categories[0] || "Joint Care");
+  const [author, setAuthor] = useState(post?.authorName || "Dr. Mark Weis");
+  const [imageUrl, setImageUrl] = useState(post?.googleDriveImageUrl || "");
+  const [seoTitle, setSeoTitle] = useState(post?.seo?.metaTitle || "");
+  const [seoDescription, setSeoDescription] = useState(post?.seo?.metaDescription || "");
+  const [keywords, setKeywords] = useState(post?.seo?.metaKeywords?.join(", ") || "");
+  const [content, setContent] = useState(post?.content || "");
+  const [publishedDate, setPublishedDate] = useState(
+    post?.publishedAt || new Date().toISOString().split("T")[0]
+  );
+  const [status, setStatus] = useState(post?.status || "draft");
+
+  // Auto-generate slug from title
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setTitle(val);
+    if (!post) {
+      // Auto slugify title if we are creating a new post
+      const slugified = val
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)+/g, "");
+      setSlug(slugified);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || !slug || !content) {
+      setError("Please fill out all required fields: Title, Slug, and Content.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    const postData = {
+      title,
+      slug,
+      description: seoDescription || title,
+      googleDriveImageUrl: imageUrl,
+      publishedAt: publishedDate,
+      categories: [category],
+      authorName: author,
+      status,
+      seo: {
+        metaTitle: seoTitle || title,
+        metaDescription: seoDescription || title,
+        metaKeywords: keywords.split(",").map((k) => k.trim()).filter(Boolean),
+        ogImage: imageUrl,
+      },
+    };
+
+    try {
+      const res = await saveBlogAction(post?.id || null, postData, content);
+      if (res.success) {
+        router.push("/admin/blogs");
+        router.refresh();
+      } else {
+        setError(res.error || "Failed to save the blog post.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("An unexpected error occurred while saving.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-8 max-w-4xl mx-auto">
+      {/* Save panel and title heading */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-brand-navy-100 pb-6">
+        <div className="flex flex-col">
+          <Link
+            href="/admin/blogs"
+            className="inline-flex items-center gap-1.5 text-xs font-black text-brand-primary-700 hover:text-brand-primary-800 transition-colors uppercase tracking-widest mb-3"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to Blogs List
+          </Link>
+          <h1 className="font-display font-extrabold text-3xl text-brand-navy-900 tracking-tight leading-tight">
+            {post ? "Edit Blog Post" : "Create New Blog Post"}
+          </h1>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-primary-700 hover:bg-brand-primary-800 disabled:bg-brand-primary-400 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all w-full sm:w-auto active:scale-98"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Saving Post...
+            </>
+          ) : (
+            <>
+              <Save className="w-4 h-4" />
+              Save Blog Post
+            </>
+          )}
+        </button>
+      </div>
+
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs font-bold rounded-2xl">
+          {error}
+        </div>
+      )}
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* Left Column: Post Fields */}
+        <div className="lg:col-span-8 flex flex-col gap-6">
+          
+          <div className="bg-white border border-brand-navy-100 rounded-3xl p-6 shadow-sm flex flex-col gap-5">
+            <h3 className="font-display font-black text-sm text-brand-navy-900 uppercase tracking-wide border-b border-brand-navy-50 pb-3">
+              Post Content
+            </h3>
+            
+            {/* Title */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="Enter blog title..."
+                value={title}
+                onChange={handleTitleChange}
+                className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
+              />
+            </div>
+
+            {/* Slug */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                Slug URL Path <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. natural-joint-pain-remedies"
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
+              />
+            </div>
+
+            {/* Content (Markdown) */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                  Markdown Body Content <span className="text-red-500">*</span>
+                </label>
+                <span className="text-[10px] text-brand-navy-400 font-semibold">Supports full markdown syntax</span>
+              </div>
+              <textarea
+                required
+                rows={16}
+                placeholder="Write your article in Markdown..."
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-mono text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner resize-y leading-relaxed"
+              />
+            </div>
+
+          </div>
+
+          {/* SEO Metadata Card */}
+          <div className="bg-white border border-brand-navy-100 rounded-3xl p-6 shadow-sm flex flex-col gap-5">
+            <h3 className="font-display font-black text-sm text-brand-navy-900 uppercase tracking-wide border-b border-brand-navy-50 pb-3">
+              SEO Parameters
+            </h3>
+
+            {/* SEO Title */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                SEO Page Title
+              </label>
+              <input
+                type="text"
+                placeholder="Defaults to Post Title if empty..."
+                value={seoTitle}
+                onChange={(e) => setSeoTitle(e.target.value)}
+                className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
+              />
+            </div>
+
+            {/* SEO Description */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                SEO Meta Description
+              </label>
+              <textarea
+                rows={3}
+                placeholder="Enter search snippet summary..."
+                value={seoDescription}
+                onChange={(e) => setSeoDescription(e.target.value)}
+                className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner resize-none"
+              />
+            </div>
+
+            {/* Keywords */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                Keywords (comma separated)
+              </label>
+              <input
+                type="text"
+                placeholder="joint health, Mobilee, pain relief"
+                value={keywords}
+                onChange={(e) => setKeywords(e.target.value)}
+                className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
+              />
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* Right Column: Settings, Images & Metadata */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          
+          {/* Featured Image */}
+          <div className="bg-white border border-brand-navy-100 rounded-3xl p-6 shadow-sm">
+            <ImageUploader
+              value={imageUrl}
+              onChange={(url) => setImageUrl(url)}
+              onRemove={() => setImageUrl("")}
+              label="Featured Image (Google Drive)"
+            />
+          </div>
+
+          {/* Settings panel */}
+          <div className="bg-white border border-brand-navy-100 rounded-3xl p-6 shadow-sm flex flex-col gap-5">
+            <h3 className="font-display font-black text-sm text-brand-navy-900 uppercase tracking-wide border-b border-brand-navy-50 pb-3">
+              Publish Settings
+            </h3>
+
+            {/* Status */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                Status
+              </label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="px-3 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-xs font-bold text-brand-navy-700 focus:outline-none focus:border-brand-primary-600 focus:bg-white cursor-pointer"
+              >
+                <option value="draft">Draft (Hidden)</option>
+                <option value="published">Published (Live)</option>
+              </select>
+            </div>
+
+            {/* Published Date */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                Publish Date
+              </label>
+              <input
+                type="date"
+                value={publishedDate}
+                onChange={(e) => setPublishedDate(e.target.value)}
+                className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
+              />
+            </div>
+
+            {/* Category */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="px-3 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-xs font-bold text-brand-navy-700 focus:outline-none focus:border-brand-primary-600 focus:bg-white cursor-pointer"
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Author */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
+                Author
+              </label>
+              <input
+                type="text"
+                placeholder="Dr. Mark Weis"
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
+                className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
+              />
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </form>
+  );
+}

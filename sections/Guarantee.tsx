@@ -1,0 +1,66 @@
+import React from "react";
+import { CONFIG } from "@/lib/config";
+
+export default function Guarantee() {
+  return (
+    <section className="py-20 sm:py-24 bg-brand-navy-950 text-white border-t border-brand-navy-900 relative overflow-hidden" id="guarantee-section">
+      {/* Background ambient radial light */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[350px] h-[350px] bg-brand-accent-950/20 blur-3xl rounded-full pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left Column: Shield Graphic */}
+          <div className="lg:col-span-4 flex justify-center">
+            {/* Custom CSS Gold Shield Badge */}
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
+              <div className="absolute inset-0 bg-brand-accent-600/10 blur-xl rounded-full animate-pulse" />
+              {/* Outer circle */}
+              <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full border-4 border-dashed border-brand-accent-500 flex items-center justify-center p-2">
+                {/* Inner badge */}
+                <div className="w-full h-full rounded-full bg-gradient-to-b from-brand-accent-500 to-brand-accent-700 flex flex-col items-center justify-center text-center text-white shadow-xl border border-brand-accent-400">
+                  <span className="text-[10px] font-black tracking-widest uppercase">
+                    100% SECURE
+                  </span>
+                  <span className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-none my-1.5">
+                    180
+                  </span>
+                  <span className="text-[11px] font-black uppercase tracking-wider leading-none">
+                    DAY
+                  </span>
+                  <span className="text-[9px] font-bold text-brand-accent-100 uppercase tracking-widest mt-1">
+                    Guarantee
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Narrative */}
+          <div className="lg:col-span-8 flex flex-col gap-5 text-center lg:text-left">
+            <span className="inline-flex px-3 py-1 rounded-full text-[10px] font-black text-brand-accent-400 bg-brand-accent-950/80 border border-brand-accent-800 uppercase tracking-widest self-center lg:self-start">
+              180-DAY MONEY-BACK GUARANTEE
+            </span>
+            <h2 className="font-display font-extrabold text-2.5xl sm:text-3.5xl text-white tracking-tight leading-tight">
+              Your Mobility Guaranteed <br />
+              <span className="text-brand-accent-500">For 180 FULL DAYS</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-brand-navy-200 leading-relaxed font-semibold">
+              Joint Genesis comes with a 100% money-back guarantee – 180 full days from your original purchase. If you&apos;re not totally and completely satisfied with our product or your results within the first 180 days, simply let us know by calling our toll-free number or emailing us, and we&apos;ll gladly give you a full refund within 48 hours of the product being returned.
+            </p>
+
+            <div className="h-px bg-brand-navy-800 my-2" />
+
+            <div className="text-center lg:text-left">
+              <p className="font-display font-black text-lg text-brand-accent-400">
+                Zero Risk. Total Freedom.
+              </p>
+              <p className="text-xs text-brand-navy-400 mt-1">
+                Support Email: <a href={`mailto:${CONFIG.supportEmail}`} className="underline hover:text-white transition-colors">{CONFIG.supportEmail}</a> | Phone: <a href={`tel:${CONFIG.supportPhone.replace(/-/g, "")}`} className="underline hover:text-white transition-colors">{CONFIG.supportPhone}</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
