@@ -4,7 +4,6 @@ import { redirect, notFound } from "next/navigation";
 import { verifySessionToken } from "@/lib/authHelper";
 import { getBlogs } from "@/lib/blogService";
 import { getCategories } from "@/lib/categoryService";
-import { getSpreadsheetValues } from "@/lib/googleSheets";
 import BlogForm from "@/components/BlogForm";
 
 interface EditBlogPageProps {
@@ -17,9 +16,9 @@ export default async function EditBlogPage({ params }: EditBlogPageProps) {
   // Await cookies in Next.js 15
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("jg_admin_session")?.value;
-  const adminEmail = sessionCookie ? verifySessionToken(sessionCookie) : null;
+  const isAuth = sessionCookie ? verifySessionToken(sessionCookie) : false;
 
-  if (!adminEmail) {
+  if (!isAuth) {
     redirect("/admin");
   }
 
@@ -29,16 +28,6 @@ export default async function EditBlogPage({ params }: EditBlogPageProps) {
 
   if (!post) {
     notFound();
-  }
-
-  // Load the markdown content from the BlogContent sheet
-  try {
-    const contentRows = await getSpreadsheetValues("BlogContent!A:B");
-    const contentRow = contentRows.find((r) => r[0] === post.id);
-    post.content = contentRow ? contentRow[1] : "";
-  } catch (error) {
-    console.error("Failed to load blog content for edit page:", error);
-    post.content = "";
   }
 
   const categories = await getCategories();

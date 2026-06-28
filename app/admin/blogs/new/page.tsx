@@ -9,9 +9,9 @@ export default async function NewBlogPage() {
   // Await cookies in Next.js 15
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("jg_admin_session")?.value;
-  const adminEmail = sessionCookie ? verifySessionToken(sessionCookie) : null;
+  const isAuth = sessionCookie ? verifySessionToken(sessionCookie) : false;
 
-  if (!adminEmail) {
+  if (!isAuth) {
     redirect("/admin");
   }
 

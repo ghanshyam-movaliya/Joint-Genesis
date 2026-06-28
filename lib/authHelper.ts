@@ -1,61 +1,53 @@
 import { NextRequest } from "next/server";
-import { google } from "googleapis";
 import crypto from "crypto";
 
-const SESSION_SECRET = process.env.GOOGLE_PRIVATE_KEY || "fallback-secret-key-12345";
 const COOKIE_NAME = "jg_admin_session";
 
 /**
- * Get authenticated Google OAuth2 Client
+ * Validates the password against the ADMIN_PASSWORD environment variable.
  */
-export function getOAuthClient() {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  
-  // Use Vercel URL fallback if site URL is not configured
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const redirectUri = `${siteUrl.replace(/\/$/, "")}/api/auth/callback`;
-
-  if (!clientId || !clientSecret) {
-    throw new Error(
-      "Missing Google OAuth Client credentials. Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in environment variables."
-    );
-  }
-
-  return new google.auth.OAuth2(clientId, clientSecret, redirectUri);
+export function verifyPassword(password: string): boolean {
+  const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+  return password === adminPassword;
 }
 
 /**
- * Generate a cryptographically signed session token containing the email
+ * Generates a cryptographically signed, timestamped session token.
  */
-export function signSession(email: string): string {
+export function generateSessionToken(): string {
+  const secret = process.env.ADMIN_PASSWORD || "admin123";
+  const timestamp = Date.now().toString();
   const signature = crypto
-    .createHmac("sha256", SESSION_SECRET)
-    .update(email)
+    .createHmac("sha256", secret)
+    .update(timestamp)
     .digest("hex");
-  return `${email}.${signature}`;
+  return `${timestamp}.${signature}`;
 }
 
 /**
- * Verify session token and retrieve email if valid
+ * Verifies if the session token signature is valid and not expired (7 days max).
  */
-export function verifySessionToken(token: string): string | null {
-  if (!token) return null;
-  
+export function verifySessionToken(token: string): boolean {
+  if (!token) return false;
+
   const parts = token.split(".");
-  if (parts.length !== 2) return null;
-  
-  const [email, signature] = parts;
+  if (parts.length !== 2) return false;
+
+  const [timestamp, signature] = parts;
+  const secret = process.env.ADMIN_PASSWORD || "admin123";
   const expectedSignature = crypto
-    .createHmac("sha256", SESSION_SECRET)
-    .update(email)
+    .createHmac("sha256", secret)
+    .update(timestamp)
     .digest("hex");
-    
-  if (signature === expectedSignature) {
-    return email;
-  }
-  
-  return null;
+
+  if (signature !== expectedSignature) return false;
+
+  const time = parseInt(timestamp, 10);
+  if (isNaN(time)) return false;
+
+  // Max age: 7 days
+  const isExpired = Date.now() - time > 7 * 24 * 60 * 60 * 1000;
+  return !isExpired;
 }
 
 /**
@@ -64,15 +56,5 @@ export function verifySessionToken(token: string): string | null {
 export function isAuthenticated(request: NextRequest): boolean {
   const sessionCookie = request.cookies.get(COOKIE_NAME);
   if (!sessionCookie) return false;
-
-  const email = verifySessionToken(sessionCookie.value);
-  if (!email) return false;
-
-  // Verify email matches the configured admin email (if set)
-  const allowedAdmin = process.env.ADMIN_EMAIL;
-  if (allowedAdmin && email.toLowerCase() !== allowedAdmin.toLowerCase()) {
-    return false;
-  }
-
-  return true;
+  return verifySessionToken(sessionCookie.value);
 }

@@ -1,22 +1,20 @@
-import {
-  getSpreadsheetValues,
-  appendSpreadsheetRow,
-  updateSpreadsheetRow,
-  deleteSpreadsheetRow,
-} from "./googleSheets";
+import fs from "fs";
+import path from "path";
+import { commitToGitHub } from "./github";
 
+// UI-compatible Post interface used across the website components
 export interface Post {
-  id: string; // Blog ID
+  id: string;
   title: string;
   slug: string;
-  description: string; // Maps to SEO Description
-  googleDriveImageUrl: string; // Maps to Image URL
-  publishedAt: string; // Maps to Published Date (YYYY-MM-DD)
-  categories: string[]; // Maps to [Category]
-  authorName: string; // Maps to Author
-  readingTime: string; // Maps to Reading Time
-  status: string; // "published" or "draft"
-  content?: string; // Markdown Content
+  description: string;          // Maps to seoDescription
+  googleDriveImageUrl: string;  // Maps to image
+  publishedAt: string;          // Maps to publishedDate
+  categories: string[];         // Maps to [category]
+  authorName: string;           // Maps to author
+  readingTime: string;          // Maps to readingTime
+  status: string;               // "published" or "draft"
+  content: string;              // Markdown Content
   seo?: {
     metaTitle?: string;
     metaDescription?: string;
@@ -25,94 +23,123 @@ export interface Post {
   };
 }
 
-/**
- * Maps a Google Sheet row from Blogs sheet to a typed Post object
- */
-function mapRowToPost(row: string[]): Post {
-  const [
-    id,
-    slug,
-    title,
-    category,
-    author,
-    imageUrl,
-    seoTitle,
-    seoDescription,
-    keywords,
-    publishedDate,
-    status,
-    readingTime,
-  ] = row;
-
-  const parsedKeywords = keywords ? keywords.split(",").map((k: string) => k.trim()) : [];
-
-  return {
-    id: id || "",
-    slug: slug || "",
-    title: title || "",
-    description: seoDescription || "",
-    googleDriveImageUrl: imageUrl || "",
-    publishedAt: publishedDate || new Date().toISOString().split("T")[0],
-    categories: category ? [category] : ["General"],
-    authorName: author || "Dr. Mark Weis",
-    readingTime: readingTime || "5 min read",
-    status: status || "draft",
-    seo: {
-      metaTitle: seoTitle || title || "",
-      metaDescription: seoDescription || "",
-      metaKeywords: parsedKeywords,
-      ogImage: imageUrl || "",
-    },
-  };
+// Internal JSON database storage layout
+interface StoredBlog {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  author: string;
+  image: string;
+  seoTitle: string;
+  seoDescription: string;
+  keywords: string[];
+  publishedDate: string;
+  readingTime: string;
+  status: string;
+  content: string;
 }
 
-/**
- * Get all blog posts from the Google Sheet
- */
-export async function getBlogs(): Promise<Post[]> {
-  try {
-    const rows = await getSpreadsheetValues("Blogs!A:L");
-    if (rows.length <= 1) return []; // Only headers
+const blogsFilePath = path.join(process.cwd(), "data", "blogs.json");
 
-    // Skip the header row and map to Post objects
-    return rows.slice(1).map(mapRowToPost);
+/**
+ * Reads local blogs.json file from the disk
+ */
+function readBlogsFile(): StoredBlog[] {
+  try {
+    if (!fs.existsSync(blogsFilePath)) {
+      return [];
+    }
+    const rawData = fs.readFileSync(blogsFilePath, "utf8");
+    return JSON.parse(rawData || "[]");
   } catch (error) {
-    console.error("Failed to fetch blogs from Google Sheets:", error);
+    console.error("Failed to read local blogs.json file:", error);
     return [];
   }
 }
 
 /**
- * Fetch a single blog post by its slug, including its markdown content
+ * Writes blogs list to the local disk and automatically pushes to GitHub
+ */
+async function saveAndCommitBlogs(blogs: StoredBlog[], commitMessage: string): Promise<void> {
+  const jsonText = JSON.stringify(blogs, null, 2);
+  
+  // 1. Write locally so changes are reflected in local development immediately
+  fs.writeFileSync(blogsFilePath, jsonText, "utf8");
+
+  // 2. Commit and push changes directly to GitHub (triggers Vercel deploy)
+  await commitToGitHub("data/blogs.json", jsonText, commitMessage);
+}
+
+/**
+ * Maps StoredBlog database format to the UI-compatible Post format
+ */
+function mapStoredToPost(blog: StoredBlog): Post {
+  return {
+    id: blog.id,
+    title: blog.title,
+    slug: blog.slug,
+    description: blog.seoDescription || "",
+    googleDriveImageUrl: blog.image || "",
+    publishedAt: blog.publishedDate || "",
+    categories: blog.category ? [blog.category] : ["General"],
+    authorName: blog.author || "Dr. Mark Weis",
+    readingTime: blog.readingTime || "5 min read",
+    status: blog.status || "draft",
+    content: blog.content || "",
+    seo: {
+      metaTitle: blog.seoTitle || blog.title,
+      metaDescription: blog.seoDescription || "",
+      metaKeywords: blog.keywords || [],
+      ogImage: blog.image || "",
+    },
+  };
+}
+
+/**
+ * Maps UI Post layout back into the StoredBlog database layout
+ */
+function mapPostToStored(post: Post): StoredBlog {
+  const category = post.categories?.[0] || "General";
+  
+  return {
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    category,
+    author: post.authorName,
+    image: post.googleDriveImageUrl,
+    seoTitle: post.seo?.metaTitle || post.title,
+    seoDescription: post.seo?.metaDescription || post.description,
+    keywords: post.seo?.metaKeywords || [],
+    publishedDate: post.publishedAt,
+    readingTime: post.readingTime,
+    status: post.status,
+    content: post.content,
+  };
+}
+
+/**
+ * Get all blog posts from JSON storage
+ */
+export async function getBlogs(): Promise<Post[]> {
+  const blogs = readBlogsFile();
+  return blogs.map(mapStoredToPost);
+}
+
+/**
+ * Fetch a single blog post by its slug path
  */
 export async function getBlogBySlug(slug: string): Promise<Post | null> {
-  try {
-    const posts = await getBlogs();
-    const post = posts.find((p) => p.slug === slug);
-    if (!post) return null;
-
-    // Load markdown content from the BlogContent sheet
-    const contentRows = await getSpreadsheetValues("BlogContent!A:B");
-    const contentRow = contentRows.find((r) => r[0] === post.id);
-
-    if (contentRow) {
-      post.content = contentRow[1] || "";
-    } else {
-      post.content = "";
-    }
-
-    return post;
-  } catch (error) {
-    console.error(`Failed to fetch blog post by slug "${slug}":`, error);
-    return null;
-  }
+  const posts = await getBlogs();
+  return posts.find((p) => p.slug === slug) || null;
 }
 
 /**
  * Create a new blog post
  */
 export async function createBlog(
-  blog: Omit<Post, "id" | "readingTime">,
+  blog: Omit<Post, "id" | "readingTime" | "content">,
   content: string
 ): Promise<Post> {
   const id = `blog_${Date.now()}`;
@@ -122,35 +149,19 @@ export async function createBlog(
   const readingMinutes = Math.max(1, Math.ceil(words / 200));
   const readingTime = `${readingMinutes} min read`;
 
-  const category = blog.categories[0] || "General";
-  const keywordsStr = blog.seo?.metaKeywords?.join(",") || "";
-
-  const blogRow = [
-    id,
-    blog.slug,
-    blog.title,
-    category,
-    blog.authorName,
-    blog.googleDriveImageUrl,
-    blog.seo?.metaTitle || blog.title,
-    blog.seo?.metaDescription || blog.description,
-    keywordsStr,
-    blog.publishedAt,
-    blog.status,
-    readingTime,
-  ];
-
-  // 1. Write row to Blogs sheet
-  await appendSpreadsheetRow("Blogs!A:L", blogRow);
-
-  // 2. Write row to BlogContent sheet
-  await appendSpreadsheetRow("BlogContent!A:B", [id, content]);
-
-  return {
+  const newPost: Post = {
     ...blog,
     id,
     readingTime,
+    content,
   };
+
+  const blogs = readBlogsFile();
+  const updatedStored = [...blogs, mapPostToStored(newPost)];
+
+  await saveAndCommitBlogs(updatedStored, `feat(blog): create post "${blog.title}"`);
+
+  return newPost;
 }
 
 /**
@@ -161,83 +172,63 @@ export async function updateBlog(
   updatedFields: Partial<Post>,
   content?: string
 ): Promise<void> {
-  // 1. Locate the row index of the target blog in the Blogs sheet
-  const rows = await getSpreadsheetValues("Blogs!A:A");
-  const rowIndex = rows.findIndex((r) => r[0] === id);
+  const blogs = readBlogsFile();
+  const index = blogs.findIndex((b) => b.id === id);
 
-  if (rowIndex === -1) {
-    throw new Error(`Blog post with ID "${id}" was not found in the database.`);
+  if (index === -1) {
+    throw new Error(`Blog post with ID "${id}" was not found in JSON storage.`);
   }
 
-  // 2. Load the current row data to merge updates
-  const fullRows = await getSpreadsheetValues(`Blogs!A${rowIndex + 1}:L${rowIndex + 1}`);
-  const currentRow = fullRows[0];
-  const post = mapRowToPost(currentRow);
+  const currentStored = blogs[index];
+  const currentPost = mapStoredToPost(currentStored);
 
-  // 3. Recalculate reading time if content is updated
-  let readingTime = post.readingTime;
+  // Recalculate reading time if content is updated
+  let readingTime = currentStored.readingTime;
   if (content !== undefined) {
     const words = content.trim().split(/\s+/).length;
     const readingMinutes = Math.max(1, Math.ceil(words / 200));
     readingTime = `${readingMinutes} min read`;
   }
 
-  const category = updatedFields.categories ? updatedFields.categories[0] : post.categories[0];
-  const keywordsStr = updatedFields.seo?.metaKeywords
-    ? updatedFields.seo.metaKeywords.join(",")
-    : post.seo?.metaKeywords?.join(",") || "";
-
-  const updatedRow = [
+  const mergedPost: Post = {
     id,
-    updatedFields.slug ?? post.slug,
-    updatedFields.title ?? post.title,
-    category,
-    updatedFields.authorName ?? post.authorName,
-    updatedFields.googleDriveImageUrl ?? post.googleDriveImageUrl,
-    updatedFields.seo?.metaTitle ?? post.seo?.metaTitle ?? post.title,
-    updatedFields.seo?.metaDescription ?? post.seo?.metaDescription ?? post.description,
-    keywordsStr,
-    updatedFields.publishedAt ?? post.publishedAt,
-    updatedFields.status ?? post.status,
+    title: updatedFields.title ?? currentPost.title,
+    slug: updatedFields.slug ?? currentPost.slug,
+    description: updatedFields.description ?? currentPost.description,
+    googleDriveImageUrl: updatedFields.googleDriveImageUrl ?? currentPost.googleDriveImageUrl,
+    publishedAt: updatedFields.publishedAt ?? currentPost.publishedAt,
+    categories: updatedFields.categories ?? currentPost.categories,
+    authorName: updatedFields.authorName ?? currentPost.authorName,
     readingTime,
-  ];
+    status: updatedFields.status ?? currentPost.status,
+    content: content ?? currentPost.content,
+    seo: {
+      metaTitle: updatedFields.seo?.metaTitle ?? currentPost.seo?.metaTitle ?? currentPost.title,
+      metaDescription: updatedFields.seo?.metaDescription ?? currentPost.seo?.metaDescription ?? currentPost.description,
+      metaKeywords: updatedFields.seo?.metaKeywords ?? currentPost.seo?.metaKeywords ?? currentPost.seo?.metaKeywords ?? [],
+      ogImage: updatedFields.googleDriveImageUrl ?? currentPost.googleDriveImageUrl,
+    },
+  };
 
-  // Update in Blogs sheet (note sheet is 1-indexed, so row index + 1 is range index)
-  await updateSpreadsheetRow(`Blogs!A${rowIndex + 1}:L${rowIndex + 1}`, updatedRow);
+  blogs[index] = mapPostToStored(mergedPost);
 
-  // 4. Update in BlogContent sheet if content was updated
-  if (content !== undefined) {
-    const contentRows = await getSpreadsheetValues("BlogContent!A:A");
-    const contentRowIndex = contentRows.findIndex((r) => r[0] === id);
-
-    if (contentRowIndex !== -1) {
-      await updateSpreadsheetRow(`BlogContent!A${contentRowIndex + 1}:B${contentRowIndex + 1}`, [id, content]);
-    } else {
-      // Fallback: Append if somehow missing
-      await appendSpreadsheetRow("BlogContent!A:B", [id, content]);
-    }
-  }
+  await saveAndCommitBlogs(blogs, `chore(blog): update post "${mergedPost.title}"`);
 }
 
 /**
- * Delete a blog post and its content
+ * Delete a blog post
  */
 export async function deleteBlog(id: string): Promise<void> {
-  // 1. Delete from Blogs sheet
-  const rows = await getSpreadsheetValues("Blogs!A:A");
-  const rowIndex = rows.findIndex((r) => r[0] === id);
+  const blogs = readBlogsFile();
+  const target = blogs.find((b) => b.id === id);
 
-  if (rowIndex !== -1) {
-    await deleteSpreadsheetRow("Blogs", rowIndex);
+  if (!target) {
+    throw new Error(`Blog post with ID "${id}" was not found.`);
   }
 
-  // 2. Delete from BlogContent sheet
-  const contentRows = await getSpreadsheetValues("BlogContent!A:A");
-  const contentRowIndex = contentRows.findIndex((r) => r[0] === id);
+  const filteredBlogs = blogs.filter((b) => b.id !== id);
 
-  if (contentRowIndex !== -1) {
-    await deleteSpreadsheetRow("BlogContent", contentRowIndex);
-  }
+  await saveAndCommitBlogs(filteredBlogs, `refactor(blog): delete post "${target.title}"`);
 }
 
 /**
@@ -255,4 +246,22 @@ export async function getRelatedPosts(currentSlug: string, categories: string[])
         p.categories.some((c) => lowerCategories.includes(c.toLowerCase()))
     )
     .slice(0, 3);
+}
+
+/**
+ * Fetches dynamic list of categories based on existing posts (avoiding hardcoded Category sheet calls)
+ */
+export async function getCategories(): Promise<string[]> {
+  const posts = await getBlogs();
+  const categorySet = new Set<string>();
+  
+  posts.forEach((post) => {
+    post.categories.forEach((cat) => categorySet.add(cat));
+  });
+
+  if (categorySet.size === 0) {
+    return ["Joint Care", "Natural Health", "Science", "Nutrition", "Healthy Living"];
+  }
+
+  return Array.from(categorySet);
 }

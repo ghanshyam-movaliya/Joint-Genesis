@@ -25,6 +25,7 @@ export default function SettingsForm({ settings, seo }: SettingsFormProps) {
   const [affiliateLink, setAffiliateLink] = useState(settings.affiliateLink);
   const [supportEmail, setSupportEmail] = useState(settings.supportEmail);
   const [supportPhone, setSupportPhone] = useState(settings.supportPhone);
+  const [websiteUrl, setWebsiteUrl] = useState(settings.websiteUrl || "");
   const [footerText, setFooterText] = useState(settings.footerText);
   const [defaultAuthor, setDefaultAuthor] = useState(settings.defaultAuthor);
 
@@ -47,8 +48,13 @@ export default function SettingsForm({ settings, seo }: SettingsFormProps) {
       affiliateLink,
       supportEmail,
       supportPhone,
+      websiteUrl,
       footerText,
       defaultAuthor,
+      // Pass SEO fields too as they are required by TypeScript for WebsiteSettings
+      defaultTitle: seo.defaultTitle,
+      defaultDescription: seo.defaultDescription,
+      defaultKeywords: seo.defaultKeywords,
     };
 
     const updatedSeo: SeoSettings = {
@@ -157,6 +163,18 @@ export default function SettingsForm({ settings, seo }: SettingsFormProps) {
               required
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
+              className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
+            />
+          </div>
+
+          {/* Website URL */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">Website URL</label>
+            <input
+              type="url"
+              required
+              value={websiteUrl}
+              onChange={(e) => setWebsiteUrl(e.target.value)}
               className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
             />
           </div>

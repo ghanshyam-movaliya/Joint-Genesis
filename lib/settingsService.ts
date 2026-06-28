@@ -1,4 +1,6 @@
-import { getSpreadsheetValues, updateSpreadsheetRow } from "./googleSheets";
+import fs from "fs";
+import path from "path";
+import { commitToGitHub } from "./github";
 
 export interface WebsiteSettings {
   websiteName: string;
@@ -6,9 +8,18 @@ export interface WebsiteSettings {
   affiliateLink: string;
   supportEmail: string;
   supportPhone: string;
+  websiteUrl: string; // added to match settings.json specification
   footerText: string;
   defaultAuthor: string;
+  // SEO default values merged inside settings
+  defaultTitle: string;
+  defaultDescription: string;
+  defaultKeywords: string[];
+  googleVerification?: string;
+  bingVerification?: string;
 }
+
+const settingsFilePath = path.join(process.cwd(), "data", "settings.json");
 
 const DEFAULT_SETTINGS: WebsiteSettings = {
   websiteName: "Joint Genesis™",
@@ -16,49 +27,64 @@ const DEFAULT_SETTINGS: WebsiteSettings = {
   affiliateLink: "https://72d7fg1er50vavbk28pks1sve4.hop.clickbank.net/?tid=affiliate",
   supportEmail: "support@biodynamix.co",
   supportPhone: "1-800-473-5188",
+  websiteUrl: "https://en-jointgenesis.com",
   footerText: "Copyright 2026 - Joint Genesis™ All Rights Reserved.",
   defaultAuthor: "Dr. Mark Weis",
+  googleVerification: "",
+  bingVerification: "",
+  defaultTitle: "Joint Genesis™ | Support Rejuvenated Joint Comfort & Mobility",
+  defaultDescription:
+    "Discover Joint Genesis™, the doctor-formulated supplement that targets the root cause of age-related joint stiffness by supporting healthy synovial fluid.",
+  defaultKeywords: [
+    "Joint Genesis",
+    "BioDynamix",
+    "joint health supplement",
+    "joint lubrication",
+    "synovial fluid",
+  ],
 };
 
 /**
- * Fetch global website settings from Settings sheet
+ * Reads website settings from local settings.json
  */
 export async function getSettings(): Promise<WebsiteSettings> {
   try {
-    const rows = await getSpreadsheetValues("Settings!A:G");
-    if (rows.length <= 1 || !rows[1]) {
+    if (!fs.existsSync(settingsFilePath)) {
       return DEFAULT_SETTINGS;
     }
-
-    const row = rows[1];
+    const rawData = fs.readFileSync(settingsFilePath, "utf8");
+    const parsed = JSON.parse(rawData || "{}");
+    
     return {
-      websiteName: row[0] || DEFAULT_SETTINGS.websiteName,
-      domain: row[1] || DEFAULT_SETTINGS.domain,
-      affiliateLink: row[2] || DEFAULT_SETTINGS.affiliateLink,
-      supportEmail: row[3] || DEFAULT_SETTINGS.supportEmail,
-      supportPhone: row[4] || DEFAULT_SETTINGS.supportPhone,
-      footerText: row[5] || DEFAULT_SETTINGS.footerText,
-      defaultAuthor: row[6] || DEFAULT_SETTINGS.defaultAuthor,
+      websiteName: parsed.websiteName || DEFAULT_SETTINGS.websiteName,
+      domain: parsed.domain || DEFAULT_SETTINGS.domain,
+      affiliateLink: parsed.affiliateLink || DEFAULT_SETTINGS.affiliateLink,
+      supportEmail: parsed.supportEmail || DEFAULT_SETTINGS.supportEmail,
+      supportPhone: parsed.supportPhone || DEFAULT_SETTINGS.supportPhone,
+      websiteUrl: parsed.websiteUrl || DEFAULT_SETTINGS.websiteUrl,
+      footerText: parsed.footerText || DEFAULT_SETTINGS.footerText,
+      defaultAuthor: parsed.defaultAuthor || DEFAULT_SETTINGS.defaultAuthor,
+      defaultTitle: parsed.defaultTitle || DEFAULT_SETTINGS.defaultTitle,
+      defaultDescription: parsed.defaultDescription || DEFAULT_SETTINGS.defaultDescription,
+      defaultKeywords: parsed.defaultKeywords || DEFAULT_SETTINGS.defaultKeywords,
+      googleVerification: parsed.googleVerification || "",
+      bingVerification: parsed.bingVerification || "",
     };
   } catch (error) {
-    console.error("Failed to fetch settings from Google Sheets:", error);
+    console.error("Failed to read settings.json:", error);
     return DEFAULT_SETTINGS;
   }
 }
 
 /**
- * Update global website settings
+ * Updates website settings and pushes the updated JSON to GitHub
  */
 export async function updateSettings(settings: WebsiteSettings): Promise<void> {
-  const rowValues = [
-    settings.websiteName,
-    settings.domain,
-    settings.affiliateLink,
-    settings.supportEmail,
-    settings.supportPhone,
-    settings.footerText,
-    settings.defaultAuthor,
-  ];
+  const jsonText = JSON.stringify(settings, null, 2);
 
-  await updateSpreadsheetRow("Settings!A2:G2", rowValues);
+  // 1. Write locally
+  fs.writeFileSync(settingsFilePath, jsonText, "utf8");
+
+  // 2. Commit and push to GitHub (triggers Vercel redeploy)
+  await commitToGitHub("data/settings.json", jsonText, "chore(settings): update website configurations");
 }

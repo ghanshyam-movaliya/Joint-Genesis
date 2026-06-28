@@ -3,14 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { createBlog, updateBlog, deleteBlog, Post } from "@/lib/blogService";
 import { updateSettings, WebsiteSettings } from "@/lib/settingsService";
-import { updateSeoSettings, SeoSettings } from "@/lib/seoService";
+import { SeoSettings } from "@/lib/seoService";
 
 /**
  * Server Action to save (create or update) a blog post
  */
 export async function saveBlogAction(
   id: string | null,
-  postData: Omit<Post, "id" | "readingTime">,
+  postData: Omit<Post, "id" | "readingTime" | "content">,
   content: string
 ) {
   try {
@@ -67,10 +67,13 @@ export async function saveSettingsAction(
   seo: SeoSettings
 ) {
   try {
-    await Promise.all([
-      updateSettings(settings),
-      updateSeoSettings(seo),
-    ]);
+    const mergedSettings: WebsiteSettings = {
+      ...settings,
+      defaultTitle: seo.defaultTitle,
+      defaultDescription: seo.defaultDescription,
+      defaultKeywords: seo.defaultKeywords,
+    };
+    await updateSettings(mergedSettings);
 
     // Revalidate all paths to update copyright/contact/SEO info
     revalidatePath("/", "layout");

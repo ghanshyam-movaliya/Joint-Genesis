@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 const NAV_LINKS = [
   { href: "/#", label: "Home" },
   { href: "/#about", label: "About" },
-  { href: "/#benefits", label: "Benefits" },
   { href: "/#ingredients", label: "Ingredients" },
+  { href: "/#benefits", label: "Benefits" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/blog", label: "Blog" },
   { href: "/#faqs", label: "FAQs" },
@@ -111,7 +111,7 @@ export default function Navbar() {
           <div className="flex lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-xl text-brand-navy-700 hover:text-brand-primary-700 hover:bg-brand-navy-100/50 transition-colors"
+              className="cursor-pointer inline-flex items-center justify-center p-2 rounded-xl text-brand-navy-700 hover:text-brand-primary-700 hover:bg-brand-navy-100/50 transition-colors"
               aria-expanded="false"
               aria-label="Toggle main menu"
             >
@@ -146,6 +146,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={() => setIsOpen(false)}
                   className={cn(
                     "flex items-center px-4 py-3 rounded-xl text-base font-bold transition-all duration-200",
                     isActive
@@ -170,6 +171,7 @@ export default function Navbar() {
               href={CONFIG.AFFILIATE_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => setIsOpen(false)}
               className="flex items-center justify-center gap-2 w-full py-4 rounded-xl text-base font-bold text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200"
               id="mobile-nav-cta"
             >

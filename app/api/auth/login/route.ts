@@ -1,27 +1,41 @@
-import { NextResponse } from "next/server";
-import { getOAuthClient } from "@/lib/authHelper";
+import { NextRequest, NextResponse } from "next/server";
+import { verifyPassword, generateSessionToken } from "@/lib/authHelper";
 
-export async function GET() {
+export async function POST(request: NextRequest) {
   try {
-    const oauth2Client = getOAuthClient();
-    
-    // We only need profile and email scope to verify their identity
-    const scopes = [
-      "https://www.googleapis.com/auth/userinfo.profile",
-      "https://www.googleapis.com/auth/userinfo.email",
-    ];
+    const { password } = await request.json();
 
-    const url = oauth2Client.generateAuthUrl({
-      access_type: "offline",
-      scope: scopes,
-      prompt: "consent",
+    if (!password) {
+      return NextResponse.json(
+        { success: false, error: "Password is required." },
+        { status: 400 }
+      );
+    }
+
+    if (!verifyPassword(password)) {
+      return NextResponse.json(
+        { success: false, error: "Incorrect password. Please try again." },
+        { status: 401 }
+      );
+    }
+
+    const token = generateSessionToken();
+    const response = NextResponse.json({ success: true });
+
+    // Set signed secure cookie session
+    response.cookies.set("jg_admin_session", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
     });
 
-    return NextResponse.redirect(url);
+    return response;
   } catch (error) {
-    console.error("OAuth login redirect failed:", error);
+    console.error("Login route failed:", error);
     return NextResponse.json(
-      { error: "Failed to generate authorization URL: " + (error as { message?: string }).message },
+      { success: false, error: "An unexpected error occurred during authentication." },
       { status: 500 }
     );
   }
