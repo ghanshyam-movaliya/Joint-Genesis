@@ -66,7 +66,7 @@ export default function FAQ() {
                 {/* Accordion Header Button */}
                 <button
                   onClick={() => toggleFaq(faq.id)}
-                  className="flex items-center justify-between text-left w-full px-6 py-5 focus:outline-none"
+                  className="flex items-center justify-between text-left w-full px-6 py-5 focus:outline-none cursor-pointer"
                   aria-expanded={isOpen}
                 >
                   <span className="font-display font-extrabold text-sm sm:text-base text-brand-navy-900 pr-4">

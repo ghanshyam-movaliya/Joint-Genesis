@@ -59,6 +59,21 @@ export default function Footer() {
                   Frequently Asked Questions
                 </Link>
               </li>
+              <li>
+                <Link href="/terms" className="hover:text-brand-primary-400 transition-colors">
+                  Terms and Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:text-brand-primary-400 transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/disclaimer" className="hover:text-brand-primary-400 transition-colors">
+                  Disclaimer
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -11,7 +11,7 @@ export default function WhatIsJointGenesis() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column: Copywriting & Content */}
-          <div className="lg:col-span-7 flex flex-col gap-6">
+          <div className="lg:col-span-6 flex flex-col gap-6">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black text-brand-primary-700 bg-brand-primary-50 border border-brand-primary-100 uppercase tracking-widest self-start">
               <ShieldCheck className="w-3.5 h-3.5" />
               Doctor-Formulated Joint Relief
@@ -44,16 +44,16 @@ export default function WhatIsJointGenesis() {
           </div>
 
           {/* Right Column: Visual Container & Extra Info */}
-          <div className="lg:col-span-5 flex flex-col gap-8">
+          <div className="lg:col-span-6 flex flex-col gap-6">
             
             {/* Visual Graphic Representation */}
-            <div className="relative bg-gradient-to-tr from-brand-navy-50 to-brand-primary-50 border border-brand-navy-100 rounded-[40px] p-6 shadow-sm flex justify-center items-center overflow-hidden min-h-[300px]">
+            <div className="relative bg-gradient-to-tr from-brand-navy-50 to-brand-primary-50 border border-brand-navy-100 rounded-[32px] p-6 shadow-sm flex justify-center items-center overflow-hidden min-h-[220px]">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/60 via-transparent to-transparent pointer-events-none" />
               
               <img
                 src="/images/joint genesis-image/What Is Joint Genesis/bottle joint geneis.webp"
                 alt="Joint Genesis Bottle"
-                className="max-h-[280px] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300"
+                className="max-h-[160px] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300 relative z-10"
               />
             </div>
 
@@ -62,15 +62,6 @@ export default function WhatIsJointGenesis() {
               <p className="text-xs sm:text-sm text-brand-navy-700 leading-relaxed font-medium">
                 With its plant-based, non-GMO, and carefully tested ingredients, Joint Genesis offers more than just temporary relief. It provides complete joint nourishment, protecting against age-related decline and empowering you to enjoy an active, pain-free lifestyle at any stage of life.
               </p>
-            </div>
-
-            {/* Ingredients Summary Banner */}
-            <div className="w-full border border-brand-navy-100 rounded-[28px] overflow-hidden shadow-sm bg-white p-2 flex justify-center">
-              <img 
-                src="/images/joint genesis-image/What Is Joint Genesis/Key-Ingredients-In-Joint-Genesis-1.png" 
-                alt="Key Ingredients in Joint Genesis" 
-                className="w-full h-auto object-contain rounded-2xl"
-              />
             </div>
 
             {/* 5 Badges / Buttons row */}
