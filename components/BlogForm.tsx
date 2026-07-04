@@ -10,10 +10,9 @@ import ImageUploader from "@/components/ImageUploader";
 
 interface BlogFormProps {
   post?: Post | null; // Null if creating new blog
-  categories: string[];
 }
 
-export default function BlogForm({ post, categories }: BlogFormProps) {
+export default function BlogForm({ post }: BlogFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +20,6 @@ export default function BlogForm({ post, categories }: BlogFormProps) {
   // Form Fields State
   const [title, setTitle] = useState(post?.title || "");
   const [slug, setSlug] = useState(post?.slug || "");
-  const [category, setCategory] = useState(post?.categories[0] || categories[0] || "Joint Care");
   const [author, setAuthor] = useState(post?.authorName || "Dr. Mark Weis");
   const [imageUrl, setImageUrl] = useState(post?.googleDriveImageUrl || "");
   const [seoTitle, setSeoTitle] = useState(post?.seo?.metaTitle || "");
@@ -63,7 +61,6 @@ export default function BlogForm({ post, categories }: BlogFormProps) {
       description: seoDescription || title,
       googleDriveImageUrl: imageUrl,
       publishedAt: publishedDate,
-      categories: [category],
       authorName: author,
       status,
       seo: {
@@ -292,23 +289,7 @@ export default function BlogForm({ post, categories }: BlogFormProps) {
               />
             </div>
 
-            {/* Category */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">
-                Category
-              </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="px-3 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-xs font-bold text-brand-navy-700 focus:outline-none focus:border-brand-primary-600 focus:bg-white cursor-pointer"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
+
 
             {/* Author */}
             <div className="flex flex-col gap-1.5">

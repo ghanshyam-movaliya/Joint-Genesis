@@ -4,7 +4,6 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getBlogs } from "@/lib/blogService";
-import { getCategories } from "@/lib/categoryService";
 import { ArrowLeft, Plus } from "lucide-react";
 import AdminBlogList from "./AdminBlogList";
 
@@ -16,11 +15,8 @@ export default async function AdminBlogsPage() {
     redirect("/admin");
   }
 
-  // Fetch blogs & categories on the server
-  const [blogs, categories] = await Promise.all([
-    getBlogs(),
-    getCategories(),
-  ]);
+  // Fetch blogs on the server
+  const blogs = await getBlogs();
 
   return (
     <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-navy-50/20 via-white to-brand-navy-50/10 min-h-screen">
@@ -54,7 +50,7 @@ export default async function AdminBlogsPage() {
         </div>
 
         {/* Interactive Blog List Dashboard */}
-        <AdminBlogList initialBlogs={blogs} categories={categories} />
+        <AdminBlogList initialBlogs={blogs} />
 
       </div>
     </section>

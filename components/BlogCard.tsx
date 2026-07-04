@@ -11,7 +11,6 @@ interface PostCardProps {
     mainImage?: string;
     googleDriveImageUrl?: string;
     publishedAt: string;
-    categories?: string[];
     authorName?: string;
     readingTime?: string;
   };
@@ -42,15 +41,7 @@ export default function BlogCard({ post }: PostCardProps) {
             Joint Genesis™ Blog
           </div>
         )}
-        
-        {/* Category Badge */}
-        {post.categories && post.categories.length > 0 && (
-          <div className="absolute top-4 left-4 z-10">
-            <span className="inline-flex px-3 py-1 rounded-full text-[10px] font-black text-white bg-brand-primary-700 uppercase tracking-widest shadow-sm">
-              {post.categories[0]}
-            </span>
-          </div>
-        )}
+
       </div>
 
       {/* Content */}

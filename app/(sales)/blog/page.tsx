@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
 import { getBlogs } from "@/lib/blogService";
-import { getCategories } from "@/lib/categoryService";
 import { getSettings } from "@/lib/settingsService";
 import { getSeoSettings } from "@/lib/seoService";
 import BlogListClient from "./BlogListClient";
@@ -23,9 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogPage() {
-  const [posts, categories, settings] = await Promise.all([
+  const [posts, settings] = await Promise.all([
     getBlogs(),
-    getCategories(),
     getSettings(),
   ]);
 
@@ -54,7 +52,7 @@ export default async function BlogPage() {
         </div>
 
         {/* Client-side Live Filter Grid */}
-        <BlogListClient initialPosts={publishedPosts} categories={categories} />
+        <BlogListClient initialPosts={publishedPosts} />
 
       </div>
     </section>

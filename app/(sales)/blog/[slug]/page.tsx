@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Calendar, Clock, ChevronLeft, User, Folder } from "lucide-react";
+import { Calendar, Clock, ChevronLeft, User } from "lucide-react";
 
 import { getBlogBySlug, getRelatedPosts } from "@/lib/blogService";
 import ShareButtons from "@/components/ShareButtons";
@@ -83,7 +83,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
-  const relatedPosts = await getRelatedPosts(post.slug, post.categories || []);
+  const relatedPosts = await getRelatedPosts(post.slug);
 
   const formattedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
     month: "long",
@@ -115,17 +115,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         {/* Article Title Header */}
         <header className="max-w-4xl mx-auto text-center lg:text-left mb-12 flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
-            {post.categories?.map((cat) => (
-              <span 
-                key={cat}
-                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-black text-brand-primary-700 bg-brand-primary-50 border border-brand-primary-100 uppercase tracking-widest"
-              >
-                <Folder className="w-3 h-3" />
-                {cat}
-              </span>
-            ))}
-          </div>
+
 
           <h1 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-brand-navy-900 leading-tight tracking-tight">
             {post.title}

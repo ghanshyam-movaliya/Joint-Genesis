@@ -7,12 +7,10 @@ import { Post } from "@/lib/blogService";
 
 interface BlogListClientProps {
   initialPosts: Post[];
-  categories: string[];
 }
 
-export default function BlogListClient({ initialPosts, categories }: BlogListClientProps) {
+export default function BlogListClient({ initialPosts }: BlogListClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const filteredPosts = initialPosts.filter((post) => {
     const matchesSearch =
@@ -20,42 +18,16 @@ export default function BlogListClient({ initialPosts, categories }: BlogListCli
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory =
-      selectedCategory === "All" ||
-      post.categories?.some(
-        (cat) => cat.toLowerCase() === selectedCategory.toLowerCase()
-      );
-
-    return matchesSearch && matchesCategory;
+    return matchesSearch;
   });
 
   return (
     <div className="flex flex-col gap-10">
-      {/* Search & Category Filter Controls */}
-      <div className="flex flex-col md:flex-row gap-6 justify-between items-center bg-white border border-brand-navy-100 rounded-3xl p-6 shadow-sm">
+      {/* Search Control */}
+      <div className="flex justify-center items-center bg-white border border-brand-navy-100 rounded-3xl p-6 shadow-sm max-w-xl mx-auto w-full">
         
-        {/* Category Filter List */}
-        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-thin">
-          {["All", ...categories].map((cat) => {
-            const isActive = selectedCategory.toLowerCase() === cat.toLowerCase();
-            return (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all whitespace-nowrap cursor-pointer ${
-                  isActive
-                    ? "bg-brand-primary-700 text-white shadow-sm"
-                    : "bg-brand-navy-50 text-brand-navy-700 hover:bg-brand-navy-100 border border-brand-navy-100/50"
-                }`}
-              >
-                {cat}
-              </button>
-            );
-          })}
-        </div>
-
         {/* Search Bar Input */}
-        <div className="relative w-full md:w-80">
+        <div className="relative w-full">
           <span className="absolute inset-y-0 left-4 flex items-center text-brand-navy-400">
             <Search className="w-4 h-4" />
           </span>

@@ -3,8 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import Link from "next/link";
 import { getBlogs } from "@/lib/blogService";
-import { getCategories } from "@/lib/categoryService";
-import { FileText, Settings, Tags } from "lucide-react";
+import { FileText, Settings } from "lucide-react";
 import RevalidateButton from "./RevalidateButton";
 import AdminLoginForm from "@/components/AdminLoginForm";
 import AdminSignOutButton from "@/components/AdminSignOutButton";
@@ -19,10 +18,7 @@ export default async function AdminPage() {
   }
 
   // Fetch Dashboard Stats on the Server from JSON Storage
-  const [blogs, categories] = await Promise.all([
-    getBlogs(),
-    getCategories(),
-  ]);
+  const blogs = await getBlogs();
 
   const totalBlogs = blogs.length;
   const publishedBlogs = blogs.filter((b) => b.status === "published").length;
@@ -82,7 +78,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Dashboard Management Navigation grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           
           {/* Card: Blogs */}
           <div className="bg-white border border-brand-navy-100 rounded-3xl p-8 shadow-sm flex flex-col gap-6">
@@ -105,23 +101,7 @@ export default async function AdminPage() {
             </Link>
           </div>
 
-          {/* Card: Categories */}
-          <div className="bg-white border border-brand-navy-100 rounded-3xl p-8 shadow-sm flex flex-col gap-6">
-            <div className="w-12 h-12 rounded-2xl bg-brand-primary-50 text-brand-primary-700 flex items-center justify-center shadow-inner">
-              <Tags className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-display font-extrabold text-lg text-brand-navy-900">
-                Categories
-              </h3>
-              <p className="text-xs sm:text-sm text-brand-navy-500 leading-relaxed mt-2">
-                View available tags dynamically loaded from your blogs JSON records. Current category count: <span className="font-bold text-brand-navy-900">{categories.length}</span>.
-              </p>
-            </div>
-            <span className="text-center text-[10px] uppercase tracking-widest font-black text-brand-navy-400 py-3.5 bg-brand-navy-50 border border-brand-navy-100/50 rounded-xl mt-auto">
-              Dynamic Category Schema Active
-            </span>
-          </div>
+
 
           {/* Card: Settings */}
           <div className="bg-white border border-brand-navy-100 rounded-3xl p-8 shadow-sm flex flex-col gap-6">

@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { getBlogs } from "@/lib/blogService";
-import { getCategories } from "@/lib/categoryService";
 import BlogForm from "@/components/BlogForm";
 
 interface EditBlogPageProps {
@@ -28,12 +27,10 @@ export default async function EditBlogPage({ params }: EditBlogPageProps) {
     notFound();
   }
 
-  const categories = await getCategories();
-
   return (
     <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-navy-50/20 via-white to-brand-navy-50/10 min-h-screen">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <BlogForm post={post} categories={categories} />
+        <BlogForm post={post} />
       </div>
     </section>
   );

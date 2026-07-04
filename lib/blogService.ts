@@ -10,7 +10,6 @@ export interface Post {
   description: string;          // Maps to seoDescription
   googleDriveImageUrl: string;  // Maps to image
   publishedAt: string;          // Maps to publishedDate
-  categories: string[];         // Maps to [category]
   authorName: string;           // Maps to author
   readingTime: string;          // Maps to readingTime
   status: string;               // "published" or "draft"
@@ -28,7 +27,6 @@ interface StoredBlog {
   id: string;
   slug: string;
   title: string;
-  category: string;
   author: string;
   image: string;
   seoTitle: string;
@@ -82,7 +80,6 @@ function mapStoredToPost(blog: StoredBlog): Post {
     description: blog.seoDescription || "",
     googleDriveImageUrl: blog.image || "",
     publishedAt: blog.publishedDate || "",
-    categories: blog.category ? [blog.category] : ["General"],
     authorName: blog.author || "Dr. Mark Weis",
     readingTime: blog.readingTime || "5 min read",
     status: blog.status || "draft",
@@ -100,13 +97,10 @@ function mapStoredToPost(blog: StoredBlog): Post {
  * Maps UI Post layout back into the StoredBlog database layout
  */
 function mapPostToStored(post: Post): StoredBlog {
-  const category = post.categories?.[0] || "General";
-  
   return {
     id: post.id,
     slug: post.slug,
     title: post.title,
-    category,
     author: post.authorName,
     image: post.googleDriveImageUrl,
     seoTitle: post.seo?.metaTitle || post.title,
@@ -197,7 +191,6 @@ export async function updateBlog(
     description: updatedFields.description ?? currentPost.description,
     googleDriveImageUrl: updatedFields.googleDriveImageUrl ?? currentPost.googleDriveImageUrl,
     publishedAt: updatedFields.publishedAt ?? currentPost.publishedAt,
-    categories: updatedFields.categories ?? currentPost.categories,
     authorName: updatedFields.authorName ?? currentPost.authorName,
     readingTime,
     status: updatedFields.status ?? currentPost.status,
@@ -232,36 +225,16 @@ export async function deleteBlog(id: string): Promise<void> {
 }
 
 /**
- * Query related posts matching categories
+ * Query related posts (excluding current post)
  */
-export async function getRelatedPosts(currentSlug: string, categories: string[]): Promise<Post[]> {
+export async function getRelatedPosts(currentSlug: string): Promise<Post[]> {
   const posts = await getBlogs();
-  const lowerCategories = categories.map((c) => c.toLowerCase());
 
   return posts
     .filter(
       (p) =>
         p.status === "published" &&
-        p.slug !== currentSlug &&
-        p.categories.some((c) => lowerCategories.includes(c.toLowerCase()))
+        p.slug !== currentSlug
     )
     .slice(0, 3);
-}
-
-/**
- * Fetches dynamic list of categories based on existing posts (avoiding hardcoded Category sheet calls)
- */
-export async function getCategories(): Promise<string[]> {
-  const posts = await getBlogs();
-  const categorySet = new Set<string>();
-  
-  posts.forEach((post) => {
-    post.categories.forEach((cat) => categorySet.add(cat));
-  });
-
-  if (categorySet.size === 0) {
-    return ["Joint Care", "Natural Health", "Science", "Nutrition", "Healthy Living"];
-  }
-
-  return Array.from(categorySet);
 }

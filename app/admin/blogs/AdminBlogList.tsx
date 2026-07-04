@@ -8,13 +8,11 @@ import { deleteBlogAction } from "@/actions/blog";
 
 interface AdminBlogListProps {
   initialBlogs: Post[];
-  categories: string[];
 }
 
-export default function AdminBlogList({ initialBlogs, categories }: AdminBlogListProps) {
+export default function AdminBlogList({ initialBlogs }: AdminBlogListProps) {
   const [blogs, setBlogs] = useState<Post[]>(initialBlogs);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const filteredBlogs = blogs.filter((blog) => {
@@ -23,11 +21,7 @@ export default function AdminBlogList({ initialBlogs, categories }: AdminBlogLis
       blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       blog.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory =
-      selectedCategory === "All" ||
-      blog.categories.some((cat) => cat.toLowerCase() === selectedCategory.toLowerCase());
-
-    return matchesSearch && matchesCategory;
+    return matchesSearch;
   });
 
   const handleDelete = async (id: string, slug: string) => {
@@ -54,11 +48,9 @@ export default function AdminBlogList({ initialBlogs, categories }: AdminBlogLis
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Search and Filters panel */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white border border-brand-navy-100 rounded-3xl p-5 shadow-sm">
-        
-        {/* Search */}
-        <div className="relative w-full sm:w-72">
+      {/* Search panel */}
+      <div className="bg-white border border-brand-navy-100 rounded-3xl p-5 shadow-sm">
+        <div className="relative w-full">
           <span className="absolute inset-y-0 left-3.5 flex items-center text-brand-navy-400">
             <Search className="w-4 h-4" />
           </span>
@@ -70,24 +62,6 @@ export default function AdminBlogList({ initialBlogs, categories }: AdminBlogLis
             className="w-full pl-10 pr-4 py-2.5 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 placeholder-brand-navy-400 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
           />
         </div>
-
-        {/* Category Dropdown */}
-        <div className="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end">
-          <label className="text-xs font-bold text-brand-navy-500 uppercase tracking-wide">Category:</label>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2.5 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-xs font-bold text-brand-navy-700 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-sm cursor-pointer"
-          >
-            <option value="All">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-
       </div>
 
       {/* Blogs Table / List */}
@@ -99,7 +73,6 @@ export default function AdminBlogList({ initialBlogs, categories }: AdminBlogLis
                 <tr className="bg-brand-navy-50/50 border-b border-brand-navy-100/80 text-[10px] uppercase tracking-widest font-black text-brand-navy-500">
                   <th className="py-4 px-6">Image</th>
                   <th className="py-4 px-6">Post Details</th>
-                  <th className="py-4 px-6">Category</th>
                   <th className="py-4 px-6">Published Date</th>
                   <th className="py-4 px-6 text-center">Status</th>
                   <th className="py-4 px-6 text-right">Actions</th>
@@ -142,12 +115,7 @@ export default function AdminBlogList({ initialBlogs, categories }: AdminBlogLis
                       </div>
                     </td>
 
-                    {/* Category */}
-                    <td className="py-4 px-6">
-                      <span className="px-2.5 py-1 bg-brand-primary-50 border border-brand-primary-100 rounded-lg text-2xs font-extrabold text-brand-primary-700 uppercase tracking-wider">
-                        {blog.categories[0]}
-                      </span>
-                    </td>
+
 
                     {/* Date */}
                     <td className="py-4 px-6 text-xs font-semibold text-brand-navy-500">
