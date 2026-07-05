@@ -63,7 +63,11 @@ async function saveAndCommitBlogs(blogs: StoredBlog[], commitMessage: string): P
   const jsonText = JSON.stringify(blogs, null, 2);
   
   // 1. Write locally so changes are reflected in local development immediately
-  fs.writeFileSync(blogsFilePath, jsonText, "utf8");
+  try {
+    fs.writeFileSync(blogsFilePath, jsonText, "utf8");
+  } catch (error) {
+    console.warn("Unable to write blogs locally (this is normal in Serverless/Vercel environments):", error);
+  }
 
   // 2. Commit and push changes directly to GitHub (triggers Vercel deploy)
   await commitToGitHub("data/blogs.json", jsonText, commitMessage);

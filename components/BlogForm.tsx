@@ -107,6 +107,7 @@ export default function BlogForm({ post }: BlogFormProps) {
         <button
           type="submit"
           disabled={loading}
+          style={{ cursor: "pointer" }}
           className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-primary-700 hover:bg-brand-primary-800 disabled:bg-brand-primary-400 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all w-full sm:w-auto active:scale-98"
         >
           {loading ? (

@@ -83,7 +83,11 @@ export async function updateSettings(settings: WebsiteSettings): Promise<void> {
   const jsonText = JSON.stringify(settings, null, 2);
 
   // 1. Write locally
-  fs.writeFileSync(settingsFilePath, jsonText, "utf8");
+  try {
+    fs.writeFileSync(settingsFilePath, jsonText, "utf8");
+  } catch (error) {
+    console.warn("Unable to write settings locally (this is normal in Serverless/Vercel environments):", error);
+  }
 
   // 2. Commit and push to GitHub (triggers Vercel redeploy)
   await commitToGitHub("data/settings.json", jsonText, "chore(settings): update website configurations");
