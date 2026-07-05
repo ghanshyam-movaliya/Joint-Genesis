@@ -96,5 +96,19 @@
     "readingTime": "1 min read",
     "status": "published",
     "content": "sfdsa"
+  },
+  {
+    "id": "blog_1783229410564",
+    "slug": "5-july-2026-new-blog",
+    "title": "5 july 2026 new blog",
+    "author": "Dr. Mark Weis",
+    "image": "https://drive.google.com/uc?export=view&id=1y91PeK3hlm74pUvzFR_i_bc0Px_Xpf8B",
+    "seoTitle": "5 july 2026 new blog",
+    "seoDescription": "5 july 2026 new blog",
+    "keywords": [],
+    "publishedDate": "2026-07-05",
+    "readingTime": "1 min read",
+    "status": "draft",
+    "content": "first blog of july 2026"
   }
 ]
