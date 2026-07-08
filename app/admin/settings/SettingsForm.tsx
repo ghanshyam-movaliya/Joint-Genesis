@@ -191,41 +191,7 @@ export default function SettingsForm({ settings, seo }: SettingsFormProps) {
             />
           </div>
 
-          {/* Support Email */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">Support Email Address</label>
-            <input
-              type="email"
-              required
-              value={supportEmail}
-              onChange={(e) => setSupportEmail(e.target.value)}
-              className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
-            />
-          </div>
 
-          {/* Support Phone */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">Support Phone Number</label>
-            <input
-              type="text"
-              required
-              value={supportPhone}
-              onChange={(e) => setSupportPhone(e.target.value)}
-              className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
-            />
-          </div>
-
-          {/* Default Author */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">Default Author</label>
-            <input
-              type="text"
-              required
-              value={defaultAuthor}
-              onChange={(e) => setDefaultAuthor(e.target.value)}
-              className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
-            />
-          </div>
 
           {/* Footer Copyright Text */}
           <div className="flex flex-col gap-1.5">

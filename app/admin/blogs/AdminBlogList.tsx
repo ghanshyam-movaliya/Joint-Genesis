@@ -5,12 +5,14 @@ import Link from "next/link";
 import { Search, Edit2, Trash2, Loader2, Calendar, FileText } from "lucide-react";
 import { Post } from "@/lib/blogService";
 import { deleteBlogAction } from "@/actions/blog";
+import { cn } from "@/lib/utils";
 
 interface AdminBlogListProps {
   initialBlogs: Post[];
+  isDeploymentRunning?: boolean;
 }
 
-export default function AdminBlogList({ initialBlogs }: AdminBlogListProps) {
+export default function AdminBlogList({ initialBlogs, isDeploymentRunning = false }: AdminBlogListProps) {
   const [blogs, setBlogs] = useState<Post[]>(initialBlogs);
   const [searchQuery, setSearchQuery] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -25,7 +27,9 @@ export default function AdminBlogList({ initialBlogs }: AdminBlogListProps) {
   });
 
   const handleDelete = async (id: string, slug: string) => {
-    if (!confirm("Are you sure you want to delete this blog post? This will permanently delete the record and its content from Google Sheets.")) {
+    if (isDeploymentRunning) return;
+
+    if (!confirm("Are you sure you want to delete this blog post? It will be marked as 'Pending Delete' and permanently removed on the next Publish.")) {
       return;
     }
 
@@ -34,7 +38,17 @@ export default function AdminBlogList({ initialBlogs }: AdminBlogListProps) {
     try {
       const res = await deleteBlogAction(id, slug);
       if (res.success) {
-        setBlogs(blogs.filter((b) => b.id !== id));
+        // Update list status to pending_delete or filter out if it was a draft
+        setBlogs(blogs.map((b) => {
+          if (b.id === id) {
+            const isLocalDraft = !initialBlogs.some((ib) => ib.id === id && ib.status === "published");
+            return {
+              ...b,
+              status: isLocalDraft ? "deleted" : "pending_delete"
+            };
+          }
+          return b;
+        }).filter(b => b.status !== "deleted"));
       } else {
         alert(res.error || "Failed to delete the post.");
       }
@@ -90,6 +104,7 @@ export default function AdminBlogList({ initialBlogs }: AdminBlogListProps) {
                             src={blog.googleDriveImageUrl}
                             alt=""
                             className="object-cover w-full h-full"
+                            referrerPolicy="no-referrer"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-brand-navy-100 text-[10px] text-brand-navy-400 font-bold">
@@ -110,12 +125,10 @@ export default function AdminBlogList({ initialBlogs }: AdminBlogListProps) {
                           {blog.title}
                         </Link>
                         <span className="text-[10px] text-brand-navy-400 font-medium mt-1">
-                          Slug: {blog.slug} | Author: {blog.authorName}
+                          Slug: {blog.slug}
                         </span>
                       </div>
                     </td>
-
-
 
                     {/* Date */}
                     <td className="py-4 px-6 text-xs font-semibold text-brand-navy-500">
@@ -125,17 +138,37 @@ export default function AdminBlogList({ initialBlogs }: AdminBlogListProps) {
                       </span>
                     </td>
 
-                    {/* Status */}
+                    {/* Status Badge */}
                     <td className="py-4 px-6 text-center">
-                      <span
-                        className={`inline-flex px-2 py-0.5 rounded-lg text-2xs font-black uppercase tracking-widest ${
-                          blog.status === "published"
-                            ? "bg-emerald-50 border border-emerald-200 text-emerald-600"
-                            : "bg-amber-50 border border-amber-200 text-amber-500"
-                        }`}
-                      >
-                        {blog.status}
-                      </span>
+                      {(() => {
+                        let classes = "bg-gray-50 border border-gray-200 text-gray-500";
+                        let label = blog.status;
+                        
+                        if (blog.status === "published") {
+                          classes = "bg-emerald-50 border border-emerald-200 text-emerald-600";
+                        } else if (blog.status === "draft") {
+                          classes = "bg-gray-100 border border-gray-300 text-gray-600";
+                        } else if (blog.status === "archived") {
+                          classes = "bg-blue-50 border border-blue-200 text-blue-600";
+                        } else if (blog.status === "pending_publish") {
+                          classes = "bg-purple-50 border border-purple-200 text-purple-600";
+                          label = "Pending Publish";
+                        } else if (blog.status === "pending_update") {
+                          classes = "bg-amber-50 border border-amber-200 text-amber-600";
+                          label = "Pending Update";
+                        } else if (blog.status === "pending_delete") {
+                          classes = "bg-rose-50 border border-rose-200 text-rose-600";
+                          label = "Pending Delete";
+                        } else if (blog.status === "deleted") {
+                          classes = "bg-red-50 border border-red-200 text-red-600";
+                        }
+
+                        return (
+                          <span className={cn("inline-flex px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider", classes)}>
+                            {label}
+                          </span>
+                        );
+                      })()}
                     </td>
 
                     {/* Actions */}
@@ -143,14 +176,20 @@ export default function AdminBlogList({ initialBlogs }: AdminBlogListProps) {
                       <div className="flex items-center justify-end gap-2.5">
                         <Link
                           href={`/admin/blogs/${blog.id}/edit`}
-                          className="p-2 border border-brand-navy-200 rounded-xl hover:bg-brand-navy-50 text-brand-navy-600 hover:text-brand-navy-800 transition-colors shadow-sm"
+                          className={cn(
+                            "p-2 border border-brand-navy-200 rounded-xl hover:bg-brand-navy-50 text-brand-navy-600 hover:text-brand-navy-800 transition-colors shadow-sm",
+                            isDeploymentRunning && "pointer-events-none opacity-50 bg-gray-100 border-gray-200 cursor-not-allowed"
+                          )}
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </Link>
                         <button
                           onClick={() => handleDelete(blog.id, blog.slug)}
-                          disabled={deletingId === blog.id}
-                          className="p-2 border border-red-200 rounded-xl hover:bg-red-50 text-red-500 hover:text-red-700 transition-colors shadow-sm disabled:opacity-50"
+                          disabled={isDeploymentRunning || deletingId === blog.id}
+                          className={cn(
+                            "p-2 border border-red-200 rounded-xl hover:bg-red-50 text-red-500 hover:text-red-700 transition-colors shadow-sm disabled:opacity-50",
+                            isDeploymentRunning && "cursor-not-allowed bg-gray-100 border-gray-200 text-gray-400 hover:bg-gray-100"
+                          )}
                         >
                           {deletingId === blog.id ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />

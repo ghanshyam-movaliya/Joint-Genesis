@@ -77,12 +77,25 @@ async function saveAndCommitBlogs(blogs: StoredBlog[], commitMessage: string): P
  * Maps StoredBlog database format to the UI-compatible Post format
  */
 function mapStoredToPost(blog: StoredBlog): Post {
+  let image = blog.image || "";
+  if (image.includes("drive.google.com/uc")) {
+    try {
+      const urlParams = new URL(image).searchParams;
+      const fileId = urlParams.get("id");
+      if (fileId) {
+        image = `https://lh3.googleusercontent.com/d/${fileId}`;
+      }
+    } catch (e) {
+      console.warn("Failed to parse Google Drive image URL:", image, e);
+    }
+  }
+
   return {
     id: blog.id,
     title: blog.title,
     slug: blog.slug,
     description: blog.seoDescription || "",
-    googleDriveImageUrl: blog.image || "",
+    googleDriveImageUrl: image,
     publishedAt: blog.publishedDate || "",
     authorName: blog.author || "Dr. Mark Weis",
     readingTime: blog.readingTime || "5 min read",
@@ -92,7 +105,7 @@ function mapStoredToPost(blog: StoredBlog): Post {
       metaTitle: blog.seoTitle || blog.title,
       metaDescription: blog.seoDescription || "",
       metaKeywords: blog.keywords || [],
-      ogImage: blog.image || "",
+      ogImage: image,
     },
   };
 }

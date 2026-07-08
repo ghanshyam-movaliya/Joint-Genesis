@@ -2,8 +2,10 @@ import React from "react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { getBlogs } from "@/lib/blogService";
+import { getDraftBlogs } from "@/services/draftService";
 import BlogForm from "@/components/BlogForm";
+
+export const dynamic = "force-dynamic";
 
 interface EditBlogPageProps {
   params: Promise<{ id: string }>;
@@ -19,8 +21,8 @@ export default async function EditBlogPage({ params }: EditBlogPageProps) {
     redirect("/admin");
   }
 
-  // Fetch blogs on the server to locate the target post
-  const blogs = await getBlogs();
+  // Fetch blogs on the server to locate the target post in drafts
+  const blogs = await getDraftBlogs();
   const post = blogs.find((b) => b.id === id) || null;
 
   if (!post) {

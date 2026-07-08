@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Calendar, Clock, ChevronLeft, User } from "lucide-react";
+import { Calendar, Clock, ChevronLeft } from "lucide-react";
 
 import { getBlogBySlug, getRelatedPosts } from "@/lib/blogService";
 import ShareButtons from "@/components/ShareButtons";
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       type: "article",
       publishedTime: post.publishedAt,
-      authors: [post.authorName || "BioDynamix Editorial"],
+      authors: ["BioDynamix Editorial"],
       images: seo?.ogImage 
         ? [{ url: seo.ogImage }] 
         : (post.googleDriveImageUrl ? [{ url: post.googleDriveImageUrl }] : []),
@@ -121,12 +121,8 @@ export default async function BlogPostPage({ params }: PageProps) {
             {post.title}
           </h1>
 
-          {/* Author/Date Meta block */}
+          {/* Date Meta block */}
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs font-bold text-brand-navy-500 mt-2 border-y border-brand-navy-100/60 py-4">
-            <span className="flex items-center gap-1.5">
-              <User className="w-4 h-4 text-brand-primary-600" />
-              By {post.authorName || "Dr. Mark Weis"}
-            </span>
             <span className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-brand-primary-600" />
               {formattedDate}
@@ -177,21 +173,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         </div>
 
-        {/* Author Profile Bio section */}
-        <div className="max-w-4xl mx-auto bg-white border border-brand-navy-100 rounded-3xl p-6 sm:p-8 mt-16 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          {/* Author avatar */}
-          <div className="w-16 h-16 rounded-full bg-brand-primary-100 text-brand-primary-800 font-display font-black text-xl flex items-center justify-center shrink-0 shadow-inner">
-            {post.authorName ? post.authorName.split(" ").map(n => n[0]).join("") : "MW"}
-          </div>
-          <div className="text-center sm:text-left">
-            <h4 className="font-display font-extrabold text-base text-brand-navy-900 leading-none">
-              About the Author: {post.authorName || "Dr. Mark Weis"}
-            </h4>
-            <p className="text-xs sm:text-sm text-brand-navy-600 leading-relaxed mt-3">
-              Dr. Mark Weis is a medical consultant and researcher dedicated to helping active adults preserve joint longevity and restore daily flexibility naturally.
-            </p>
-          </div>
-        </div>
+
 
         {/* Related Articles list */}
         {relatedPosts.length > 0 && (

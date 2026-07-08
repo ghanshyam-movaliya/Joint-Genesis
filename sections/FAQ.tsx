@@ -102,20 +102,7 @@ export default function FAQ() {
           })}
         </div>
 
-        {/* Support helper */}
-        <div className="mt-12 text-center bg-white border border-brand-navy-100 rounded-3xl p-6 shadow-sm">
-          <p className="text-xs font-semibold text-brand-navy-600">
-            Still have questions? Contact our dedicated support team at{" "}
-            <a href={`mailto:${CONFIG.supportEmail}`} className="text-brand-primary-700 underline font-bold">
-              {CONFIG.supportEmail}
-            </a>{" "}
-            or call{" "}
-            <a href={`tel:${CONFIG.supportPhone.replace(/-/g, "")}`} className="text-brand-primary-700 underline font-bold">
-              {CONFIG.supportPhone}
-            </a>
-            .
-          </p>
-        </div>
+
       </div>
     </section>
   );

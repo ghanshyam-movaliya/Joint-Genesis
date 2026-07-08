@@ -241,14 +241,6 @@ export default function ImageUploader({
             <div className="absolute inset-0 bg-brand-navy-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-4">
               <button
                 type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-brand-navy-900 rounded-xl text-xs font-black hover:bg-brand-navy-50 transition-colors shadow-sm"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                Replace
-              </button>
-              <button
-                type="button"
                 onClick={handleRemove}
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-black hover:bg-red-700 transition-colors shadow-sm"
               >

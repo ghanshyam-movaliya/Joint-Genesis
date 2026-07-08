@@ -1,0 +1,11 @@
+[
+  {
+    "id": "dep_1783524433050",
+    "date": "2026-07-08T15:27:13.050Z",
+    "commitSha": "mock_sha_19f42571c8d",
+    "commitMessage": "Publish blog changes: Added: 1, Updated: 1, Deleted: 0",
+    "status": "Ready",
+    "duration": "12s",
+    "triggeredBy": "Ghanshyam Patel"
+  }
+]

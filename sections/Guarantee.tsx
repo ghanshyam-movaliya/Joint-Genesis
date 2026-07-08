@@ -32,7 +32,7 @@ export default function Guarantee() {
               <span className="text-brand-accent-500">For 180 FULL DAYS</span>
             </h2>
             <p className="text-xs sm:text-sm text-brand-navy-200 leading-relaxed font-semibold">
-              Joint Genesis comes with a 100% money-back guarantee – 180 full days from your original purchase. If you&apos;re not totally and completely satisfied with our product or your results within the first 180 days, simply let us know by calling our toll-free number or emailing us, and we&apos;ll gladly give you a full refund within 48 hours of the product being returned.
+              Joint Genesis comes with a 100% money-back guarantee – 180 full days from your original purchase. If you&apos;re not totally and completely satisfied with our product or your results within the first 180 days, simply let us know, and we&apos;ll gladly give you a full refund within 48 hours of the product being returned.
             </p>
 
             <div className="h-px bg-brand-navy-800 my-2" />
@@ -40,9 +40,6 @@ export default function Guarantee() {
             <div className="text-center lg:text-left">
               <p className="font-display font-black text-lg text-brand-accent-400">
                 Zero Risk. Total Freedom.
-              </p>
-              <p className="text-xs text-brand-navy-400 mt-1">
-                Support Email: <a href={`mailto:${CONFIG.supportEmail}`} className="underline hover:text-white transition-colors">{CONFIG.supportEmail}</a> | Phone: <a href={`tel:${CONFIG.supportPhone.replace(/-/g, "")}`} className="underline hover:text-white transition-colors">{CONFIG.supportPhone}</a>
               </p>
             </div>
           </div>

@@ -1,13 +1,13 @@
 import React from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin, Activity } from "lucide-react";
+import { Activity } from "lucide-react";
 import { CONFIG } from "@/lib/config";
 
 export default function Footer() {
   return (
     <footer className="bg-brand-navy-950 text-brand-navy-300 border-t border-brand-navy-900 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           {/* Brand details */}
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2">
@@ -77,38 +77,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact Details */}
-          <div className="flex flex-col gap-4">
-            <h3 className="font-display text-sm font-bold text-white uppercase tracking-wider">
-              Customer Support
-            </h3>
-            <ul className="flex flex-col gap-3 text-sm">
-              <li className="flex items-start gap-2.5">
-                <Mail className="w-5 h-5 text-brand-primary-500 shrink-0" />
-                <a
-                  href={`mailto:${CONFIG.supportEmail}`}
-                  className="hover:text-brand-primary-400 transition-colors"
-                >
-                  {CONFIG.supportEmail}
-                </a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <Phone className="w-5 h-5 text-brand-primary-500 shrink-0" />
-                <a
-                  href={`tel:${CONFIG.supportPhone.replace(/-/g, "")}`}
-                  className="hover:text-brand-primary-400 transition-colors"
-                >
-                  {CONFIG.supportPhone}
-                </a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-5 h-5 text-brand-primary-500 shrink-0" />
-                <span className="text-brand-navy-400">
-                  {CONFIG.supportAddress}
-                </span>
-              </li>
-            </ul>
-          </div>
+
 
           {/* Guarantee Badges */}
           <div className="flex flex-col gap-4">

@@ -32,7 +32,7 @@ function bufferToStream(buffer: Buffer): Readable {
  */
 export function getPublicImageUrl(fileId: string): string {
   if (!fileId) return "";
-  return `https://drive.google.com/uc?export=view&id=${fileId}`;
+  return `https://lh3.googleusercontent.com/d/${fileId}`;
 }
 
 /**

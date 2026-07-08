@@ -71,10 +71,7 @@ export default function BlogCard({ post }: PostCardProps) {
         </p>
 
         {/* Footer info */}
-        <div className="flex items-center justify-between border-t border-brand-navy-100/50 pt-4 mt-auto">
-          <span className="text-xs font-bold text-brand-navy-600">
-            By {post.authorName || "Editorial Team"}
-          </span>
+        <div className="flex items-center justify-end border-t border-brand-navy-100/50 pt-4 mt-auto">
           <Link
             href={`/blog/${post.slug}`}
             className="inline-flex items-center gap-1 text-xs font-black text-brand-primary-700 group-hover:text-brand-primary-800 transition-colors"

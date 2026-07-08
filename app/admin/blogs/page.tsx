@@ -3,9 +3,11 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getBlogs } from "@/lib/blogService";
+import { getDraftBlogs } from "@/services/draftService";
 import { ArrowLeft, Plus } from "lucide-react";
 import AdminBlogList from "./AdminBlogList";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminBlogsPage() {
   // Check NextAuth session on server
@@ -15,8 +17,24 @@ export default async function AdminBlogsPage() {
     redirect("/admin");
   }
 
-  // Fetch blogs on the server
-  const blogs = await getBlogs();
+  // Fetch blogs on the server from the draft database
+  const blogs = await getDraftBlogs();
+
+  // Check if a deployment is currently running
+  let isDeploymentRunning = false;
+  try {
+    const fs = require("fs");
+    const path = require("path");
+    const historyPath = path.join(process.cwd(), "data", "deploymentHistory.json");
+    if (fs.existsSync(historyPath)) {
+      const history = JSON.parse(fs.readFileSync(historyPath, "utf8") || "[]");
+      if (history.length > 0) {
+        isDeploymentRunning = history[0].status === "Building" || history[0].status === "Queued";
+      }
+    }
+  } catch (e) {
+    console.error("Failed to check active deployment status:", e);
+  }
 
   return (
     <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-navy-50/20 via-white to-brand-navy-50/10 min-h-screen">
@@ -40,17 +58,32 @@ export default async function AdminBlogsPage() {
             </p>
           </div>
 
-          <Link
-            href="/admin/blogs/new"
-            className="inline-flex items-center gap-1.5 px-5 py-3 bg-brand-primary-700 hover:bg-brand-primary-800 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all active:scale-98"
-          >
-            <Plus className="w-4 h-4" />
-            Create New Blog Post
-          </Link>
+          {isDeploymentRunning ? (
+            <div className="inline-flex items-center gap-1.5 px-5 py-3 bg-brand-navy-300 text-brand-navy-500 text-xs font-black rounded-xl cursor-not-allowed select-none">
+              <Plus className="w-4 h-4" />
+              Deployment Active - Creating Disabled
+            </div>
+          ) : (
+            <Link
+              href="/admin/blogs/new"
+              className="inline-flex items-center gap-1.5 px-5 py-3 bg-brand-primary-700 hover:bg-brand-primary-800 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all active:scale-98"
+            >
+              <Plus className="w-4 h-4" />
+              Create New Blog Post
+            </Link>
+          )}
         </div>
 
+        {/* Banner if deployment is running */}
+        {isDeploymentRunning && (
+          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold rounded-2xl flex items-center gap-2">
+            <span className="animate-ping w-2 h-2 rounded-full bg-amber-500 mr-1 shrink-0" />
+            A deployment is currently building on Vercel. Blog creation, edits, and deletions are disabled until it completes.
+          </div>
+        )}
+
         {/* Interactive Blog List Dashboard */}
-        <AdminBlogList initialBlogs={blogs} />
+        <AdminBlogList initialBlogs={blogs} isDeploymentRunning={isDeploymentRunning} />
 
       </div>
     </section>
