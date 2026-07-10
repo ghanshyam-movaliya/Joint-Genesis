@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight, Activity } from "lucide-react";
-import { CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
+import { useAffiliateUrl } from "@/lib/settingsContext";
 
 const NAV_LINKS = [
   { href: "/#", label: "Home" },
@@ -21,6 +21,11 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "navbar"
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -96,10 +101,18 @@ export default function Navbar() {
           {/* Desktop CTA Button */}
           <div className="hidden lg:flex items-center">
             <a
-              href={CONFIG.AFFILIATE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-brand-accent-600 hover:bg-brand-accent-700 active:bg-brand-accent-800 shadow-md shadow-brand-accent-600/10 hover:shadow-lg hover:shadow-brand-accent-600/20 active:scale-98 transition-all duration-200"
+              href={isDisabled ? "#" : affiliateUrl}
+              target={isDisabled ? undefined : "_blank"}
+              rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+              onClick={(e) => {
+                if (isDisabled) {
+                  e.preventDefault();
+                }
+              }}
+              className={cn(
+                "inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-brand-accent-600 hover:bg-brand-accent-700 active:bg-brand-accent-800 shadow-md shadow-brand-accent-600/10 hover:shadow-lg hover:shadow-brand-accent-600/20 active:scale-98 transition-all duration-200",
+                isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+              )}
               id="desktop-nav-cta"
             >
               Order Now
@@ -168,11 +181,20 @@ export default function Navbar() {
               </span>
             </div>
             <a
-              href={CONFIG.AFFILIATE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-4 rounded-xl text-base font-bold text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200"
+              href={isDisabled ? "#" : affiliateUrl}
+              target={isDisabled ? undefined : "_blank"}
+              rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+              onClick={(e) => {
+                if (isDisabled) {
+                  e.preventDefault();
+                } else {
+                  setIsOpen(false);
+                }
+              }}
+              className={cn(
+                "flex items-center justify-center gap-2 w-full py-4 rounded-xl text-base font-bold text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200",
+                isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+              )}
               id="mobile-nav-cta"
             >
               Order Now

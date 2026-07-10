@@ -1,8 +1,15 @@
 "use client";
 
 import { FlaskConical, ArrowRight } from "lucide-react";
+import { useAffiliateUrl } from "@/lib/settingsContext";
+import { cn } from "@/lib/utils";
 
 export default function Ingredients() {
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "ingredients"
+  });
+
   const ingredients = [
     {
       name: "Mobilee® (Patented Complex)",
@@ -37,7 +44,7 @@ export default function Ingredients() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-brand-navy-50/50 border-y border-brand-navy-100" id="ingredients">
+    <section className="py-12 sm:py-16 bg-brand-navy-50/50 border-y border-brand-navy-100" id="ingredients">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -101,11 +108,21 @@ export default function Ingredients() {
             Support Your Joints with Science-Backed Ingredients
           </h4>
           <a
-            href="#pricing"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200"
+            href={isDisabled ? "#" : affiliateUrl}
+            target={isDisabled ? undefined : "_blank"}
+            rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+            onClick={(e) => {
+              if (isDisabled) {
+                e.preventDefault();
+              }
+            }}
+            className={cn(
+              "inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200",
+              isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+            )}
           >
-            ORDER NOW!
-            <ArrowRight className="w-5 h-5" />
+            {isDisabled ? "CURRENTLY UNAVAILABLE" : "ORDER NOW!"}
+            {!isDisabled && <ArrowRight className="w-5 h-5" />}
           </a>
         </div>
 

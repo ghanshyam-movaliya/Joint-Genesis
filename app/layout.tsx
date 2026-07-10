@@ -39,12 +39,16 @@ export const metadata: Metadata = {
 };
 
 import SessionProvider from "@/components/SessionProvider";
+import { getSettings } from "@/lib/settingsService";
+import { WebsiteSettingsProvider } from "@/lib/settingsContext";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettings();
+
   return (
     <html
       lang="en"
@@ -52,7 +56,9 @@ export default function RootLayout({
     >
       <body className="font-sans min-h-full flex flex-col text-brand-navy-900 bg-brand-navy-50">
         <SessionProvider>
-          {children}
+          <WebsiteSettingsProvider affiliateLink={settings.affiliateLink}>
+            {children}
+          </WebsiteSettingsProvider>
         </SessionProvider>
       </body>
     </html>

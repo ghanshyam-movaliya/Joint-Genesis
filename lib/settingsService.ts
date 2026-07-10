@@ -24,7 +24,7 @@ const settingsFilePath = path.join(process.cwd(), "data", "settings.json");
 const DEFAULT_SETTINGS: WebsiteSettings = {
   websiteName: "Joint Genesis™",
   domain: "en-jointgenesis.com",
-  affiliateLink: "https://72d7fg1er50vavbk28pks1sve4.hop.clickbank.net/?tid=affiliate",
+  affiliateLink: "",
   supportEmail: "support@biodynamix.co",
   supportPhone: "1-800-473-5188",
   websiteUrl: "https://en-jointgenesis.com",
@@ -58,7 +58,7 @@ export async function getSettings(): Promise<WebsiteSettings> {
     return {
       websiteName: parsed.websiteName || DEFAULT_SETTINGS.websiteName,
       domain: parsed.domain || DEFAULT_SETTINGS.domain,
-      affiliateLink: parsed.affiliateLink || DEFAULT_SETTINGS.affiliateLink,
+      affiliateLink: parsed.affiliateLink !== undefined ? parsed.affiliateLink : DEFAULT_SETTINGS.affiliateLink,
       supportEmail: parsed.supportEmail || DEFAULT_SETTINGS.supportEmail,
       supportPhone: parsed.supportPhone || DEFAULT_SETTINGS.supportPhone,
       websiteUrl: parsed.websiteUrl || DEFAULT_SETTINGS.websiteUrl,

@@ -2,8 +2,15 @@
 
 import React from "react";
 import { ArrowRight } from "lucide-react";
+import { useAffiliateUrl } from "@/lib/settingsContext";
+import { cn } from "@/lib/utils";
 
 export default function HowItWorks() {
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "how_it_works"
+  });
+
   const steps = [
     {
       title: "Rebuilds Hyaluronan Levels Inside the Joints",
@@ -28,7 +35,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-brand-navy-50/50 border-y border-brand-navy-100" id="how-it-works">
+    <section className="py-12 sm:py-16 bg-brand-navy-50/50 border-y border-brand-navy-100" id="how-it-works">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Title Block */}
@@ -88,23 +95,30 @@ export default function HowItWorks() {
           ))}
         </div>
 
-        {/* Footer CTA Banner */}
-        <div className="bg-gradient-to-br from-brand-navy-900 to-brand-navy-950 text-white rounded-[32px] p-8 sm:p-10 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden shadow-xl">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-brand-primary-800/15 via-transparent to-transparent pointer-events-none" />
-          <div className="relative z-10 text-center sm:text-left">
-            <h4 className="font-display font-extrabold text-lg sm:text-xl text-white">
-              Support Your Joints at Every Level
-            </h4>
-            <p className="text-xs text-brand-navy-300 font-semibold mt-1">
-              Give your body the vital hyaluronan it needs to restore youthful fluid cushioning.
-            </p>
-          </div>
+        {/* Footer CTA (Updated layout) */}
+        <div className="flex flex-col items-center gap-4 mt-12 text-center">
+          <h4 className="font-display font-extrabold text-lg sm:text-2xl text-brand-navy-900">
+            Support Your Joints at Every Level
+          </h4>
+          <p className="text-xs sm:text-sm text-brand-navy-600 max-w-lg leading-relaxed font-semibold">
+            Give your body the vital hyaluronan it needs to restore youthful fluid cushioning.
+          </p>
           <a
-            href="#pricing"
-            className="relative z-10 inline-flex items-center gap-2 px-5 sm:px-8 py-4 rounded-2xl text-xs sm:text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl transition-all hover:-translate-y-0.5 active:scale-98 whitespace-nowrap cursor-pointer"
+            href={isDisabled ? "#" : affiliateUrl}
+            target={isDisabled ? undefined : "_blank"}
+            rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+            onClick={(e) => {
+              if (isDisabled) {
+                e.preventDefault();
+              }
+            }}
+            className={cn(
+              "inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200 mt-2",
+              isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+            )}
           >
-            GET JOINT GENESIS NOW!
-            <ArrowRight className="w-5 h-5" />
+            {isDisabled ? "CURRENTLY UNAVAILABLE" : "GET JOINT GENESIS NOW!"}
+            {!isDisabled && <ArrowRight className="w-5 h-5" />}
           </a>
         </div>
 

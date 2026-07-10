@@ -35,43 +35,28 @@ export default function Footer() {
             </h3>
             <ul className="flex flex-col gap-2.5 text-sm">
               <li>
-                <Link href="/about" className="hover:text-brand-primary-400 transition-colors">
+                <Link href="/#about" className="hover:text-brand-primary-400 transition-colors">
                   About the Formula
                 </Link>
               </li>
               <li>
-                <Link href="/benefits" className="hover:text-brand-primary-400 transition-colors">
+                <Link href="/#benefits" className="hover:text-brand-primary-400 transition-colors">
                   Health Benefits
                 </Link>
               </li>
               <li>
-                <Link href="/ingredients" className="hover:text-brand-primary-400 transition-colors">
+                <Link href="/#ingredients" className="hover:text-brand-primary-400 transition-colors">
                   Active Ingredients
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="hover:text-brand-primary-400 transition-colors">
+                <Link href="/#pricing" className="hover:text-brand-primary-400 transition-colors">
                   Pricing & Offers
                 </Link>
               </li>
               <li>
-                <Link href="/faqs" className="hover:text-brand-primary-400 transition-colors">
+                <Link href="/#faqs" className="hover:text-brand-primary-400 transition-colors">
                   Frequently Asked Questions
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="hover:text-brand-primary-400 transition-colors">
-                  Terms and Conditions
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy-policy" className="hover:text-brand-primary-400 transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/disclaimer" className="hover:text-brand-primary-400 transition-colors">
-                  Disclaimer
                 </Link>
               </li>
             </ul>
@@ -100,6 +85,21 @@ export default function Footer() {
 
         {/* Legal disclosures & Affiliation disclaimer */}
         <div className="border-t border-brand-navy-900 pt-8 mt-8 text-center text-[10px] leading-relaxed text-brand-navy-500 flex flex-col gap-4 max-w-5xl mx-auto">
+          {/* Compliance links in a single row */}
+          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-xs text-brand-navy-400 mb-2">
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms and Conditions
+            </Link>
+            <span className="text-brand-navy-800">|</span>
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
+            <span className="text-brand-navy-800">|</span>
+            <Link href="/disclaimer" className="hover:text-white transition-colors">
+              Disclaimer
+            </Link>
+          </div>
+
           <p>
             ClickBank is the retailer of products on this site. CLICKBANK is a registered trademark of Click Sales, Inc., a Delaware corporation located at 1444 S. Entertainment Ave., Suite 410 Boise, ID 83709, USA and used by permission.
           </p>
@@ -117,19 +117,8 @@ export default function Footer() {
           </p>
 
           {/* Footer Bottom bar */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t border-brand-navy-900/50 pt-8 mt-8 text-xs text-brand-navy-400">
+          <div className="border-t border-brand-navy-900/50 pt-6 mt-6 text-xs text-brand-navy-400 text-center">
             <p>Copyright 2026 - Joint Genesis™ All Rights Reserved.</p>
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
-              <Link href="/privacy-policy" className="hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="hover:text-white transition-colors">
-                Terms and Conditions
-              </Link>
-              <Link href="/disclaimer" className="hover:text-white transition-colors">
-                Disclaimer
-              </Link>
-            </div>
           </div>
         </div>
       </div>

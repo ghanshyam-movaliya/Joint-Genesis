@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Save, Check } from "lucide-react";
+import { ArrowLeft, Loader2, Save, Check, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { WebsiteSettings } from "@/lib/settingsService";
 import { SeoSettings } from "@/lib/seoService";
@@ -184,11 +184,17 @@ export default function SettingsForm({ settings, seo }: SettingsFormProps) {
             <label className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider">Default Affiliate Hoplink</label>
             <input
               type="url"
-              required
               value={affiliateLink}
               onChange={(e) => setAffiliateLink(e.target.value)}
               className="px-4 py-3 bg-brand-navy-50 border border-brand-navy-100 rounded-xl text-sm font-medium text-brand-navy-900 focus:outline-none focus:border-brand-primary-600 focus:bg-white transition-all shadow-inner"
+              placeholder="e.g. https://your-hoplink.hop.clickbank.net"
             />
+            {!affiliateLink && (
+              <p className="text-xs text-amber-600 font-bold mt-1 flex items-center gap-1">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                Warning: Leaving this field empty will disable all purchase/checkout buttons on the website to prevent broken links.
+              </p>
+            )}
           </div>
 
 

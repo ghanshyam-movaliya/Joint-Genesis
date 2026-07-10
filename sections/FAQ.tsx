@@ -31,7 +31,7 @@ export default function FAQ() {
   };
 
   return (
-    <section className="py-20 sm:py-28 bg-brand-navy-50/50 border-t border-brand-navy-100" id="faqs">
+    <section className="py-12 sm:py-16 bg-brand-navy-50/50 border-t border-brand-navy-100" id="faqs">
       {/* FAQ Schema Injection for SEO */}
       <script
         type="application/ld+json"

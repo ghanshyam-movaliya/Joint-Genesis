@@ -3,9 +3,15 @@
 import React from "react";
 import { motion, Variants } from "framer-motion";
 import { ArrowRight, Star, ShieldCheck, CheckCircle2, Leaf } from "lucide-react";
-import { CONFIG } from "@/lib/config";
+import { useAffiliateUrl } from "@/lib/settingsContext";
+import { cn } from "@/lib/utils";
 
 export default function Hero() {
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "hero_cta"
+  });
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -93,14 +99,22 @@ export default function Hero() {
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-2"
             >
               <a
-                href={CONFIG.AFFILIATE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl hover:shadow-brand-accent-600/20 hover:-translate-y-0.5 active:scale-98 transition-all duration-200"
+                href={isDisabled ? "#" : affiliateUrl}
+                target={isDisabled ? undefined : "_blank"}
+                rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+                onClick={(e) => {
+                  if (isDisabled) {
+                    e.preventDefault();
+                  }
+                }}
+                className={cn(
+                  "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl hover:shadow-brand-accent-600/20 hover:-translate-y-0.5 active:scale-98 transition-all duration-200",
+                  isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+                )}
                 id="hero-primary-cta"
               >
-                Get 70% off Today!
-                <ArrowRight className="w-5 h-5" />
+                {isDisabled ? "Currently Unavailable" : "Get Your Discount Today!"}
+                {!isDisabled && <ArrowRight className="w-5 h-5" />}
               </a>
               <button
                 onClick={() => {
@@ -110,29 +124,6 @@ export default function Hero() {
               >
                 See the Science
               </button>
-            </motion.div>
-
-            {/* Security trust icons */}
-            <motion.div 
-              variants={itemVariants}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 border-t border-brand-navy-100 pt-6 text-xs text-brand-navy-500 font-bold"
-            >
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-brand-primary-600 shrink-0" />
-                <span>Made In USA</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-brand-primary-600 shrink-0" />
-                <span>FDA Approved</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-brand-primary-600 shrink-0" />
-                <span>GMP Certified</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Leaf className="w-5 h-5 text-brand-primary-600 shrink-0" />
-                <span>100% Natural</span>
-              </div>
             </motion.div>
           </motion.div>
 
@@ -161,7 +152,7 @@ export default function Hero() {
                 transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
               >
                 <span>Save</span>
-                <span className="text-sm font-black mt-0.5">70% OFF</span>
+                <span className="text-sm font-black mt-0.5">$180</span>
               </motion.div>
 
               <motion.div

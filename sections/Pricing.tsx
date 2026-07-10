@@ -4,6 +4,7 @@ import React from "react";
 import { Check, Shield, AlertCircle } from "lucide-react";
 import { CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
+import { useWebsiteSettings, getAffiliateUrl } from "@/lib/settingsContext";
 
 export default function Pricing() {
   // Sort packages so they display in a neat order: 1 Bottle, 6 Bottles (highlighted), 3 Bottles
@@ -11,9 +12,11 @@ export default function Pricing() {
   // Let's layout: 1 Bottle (left), 6 Bottles (center - Best Value), 3 Bottles (right - Popular).
   // The packages are pre-arranged in lib/config.ts in order: 1-bottle, 6-bottles, 3-bottles. Let's use that exact order!
   const packages = CONFIG.packages;
+  const { affiliateLink } = useWebsiteSettings();
+  const isDisabled = !affiliateLink || affiliateLink.trim() === "";
 
   return (
-    <section className="py-20 sm:py-28 bg-white scroll-mt-12" id="pricing">
+    <section className="py-12 sm:py-16 bg-white scroll-mt-12" id="pricing">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 flex flex-col items-center">
@@ -35,6 +38,12 @@ export default function Pricing() {
             const isPopular = pkg.popular;
             const hasSavings = pkg.savings > 0;
 
+            const affiliateUrl = getAffiliateUrl(affiliateLink, {
+              utm_source: "website",
+              utm_medium: "pricing_card",
+              utm_campaign: pkg.id,
+            });
+
             return (
               <div
                 key={pkg.id}
@@ -51,7 +60,7 @@ export default function Pricing() {
                 {isBestValue && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
                     <span className="inline-flex px-4 py-1.5 rounded-full text-xs font-black text-white bg-brand-accent-600 uppercase tracking-widest shadow-md">
-                      Best Value - Save 70%
+                      Best Value - Save $180
                     </span>
                   </div>
                 )}
@@ -68,9 +77,15 @@ export default function Pricing() {
                   <h3 className="font-display font-extrabold text-xl text-brand-navy-900">
                     {pkg.name}
                   </h3>
-                  <span className="inline-flex px-2.5 py-0.5 rounded bg-brand-navy-100 text-brand-navy-700 text-[10px] font-bold uppercase tracking-wider mt-1.5">
+                  <span className="inline-flex px-2.5 py-0.5 rounded bg-brand-navy-100 text-brand-navy-700 text-[10px] font-bold uppercase tracking-wider mt-1.5 mb-2">
                     {pkg.supply}
                   </span>
+
+                  {hasSavings && (
+                    <div className="w-full bg-red-600 text-white text-xs font-bold py-1.5 uppercase tracking-wider mt-2 rounded-lg shadow-sm">
+                      Save ${pkg.savings}
+                    </div>
+                  )}
 
                   {/* Package Bottle Image */}
                   <div className="my-4 flex justify-center items-center h-28 w-full">
@@ -88,23 +103,20 @@ export default function Pricing() {
                   </div>
                   
                   {/* Price display */}
-                  <div className="mt-5 flex items-baseline justify-center gap-1">
-                    <span className="text-2xl font-extrabold text-brand-navy-500">$</span>
-                    <span className="text-5xl font-black text-brand-navy-900 tracking-tight">
-                      {pkg.pricePerBottle}
-                    </span>
-                    <span className="text-xs font-bold text-brand-navy-500">/ bottle</span>
-                  </div>
-
-                  {/* Original price / Savings comparison */}
-                  {hasSavings && (
-                    <p className="text-xs text-brand-navy-500 mt-2 font-medium">
-                      Retail: <span className="line-through">${pkg.originalPrice}</span>
-                      <span className="text-brand-primary-700 font-bold ml-1.5">
-                        Save ${pkg.savings}!
+                  <div className="mt-5 flex items-center justify-center gap-2">
+                    {hasSavings && (
+                      <span className="text-2xl font-bold text-brand-navy-400 line-through">
+                        $79
                       </span>
-                    </p>
-                  )}
+                    )}
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="text-2xl font-extrabold text-brand-navy-900">$</span>
+                      <span className="text-5xl font-black text-brand-navy-900 tracking-tight">
+                        {pkg.pricePerBottle}
+                      </span>
+                      <span className="text-xs font-bold text-brand-navy-500 ml-1">/ bottle</span>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Pricing Details */}
@@ -126,7 +138,7 @@ export default function Pricing() {
                       </li>
                       <li className="flex items-center gap-2">
                         <Check className="w-4 h-4 text-brand-primary-700 shrink-0" />
-                        <span className="capitalize">{pkg.shipping}</span>
+                        <span>{pkg.shipping}</span>
                       </li>
                     </ul>
 
@@ -149,30 +161,41 @@ export default function Pricing() {
                   </div>
 
                   {/* Total price display */}
-                  <div className="mt-6 text-center">
-                    <span className="text-[10px] text-brand-navy-400 font-bold uppercase tracking-wider block">
-                      Total Order Price
+                  <div className="mt-6 text-center flex flex-col items-center gap-1">
+                    <span className="text-xs font-bold text-brand-navy-500 uppercase tracking-wider">
+                      TOTAL: ${pkg.totalPrice}
                     </span>
-                    <span className="text-2xl font-black text-brand-navy-900">
-                      ${pkg.totalPrice}
-                    </span>
-                    {pkg.shippingFee > 0 && (
-                      <span className="text-[10px] text-brand-navy-500 block font-medium">
-                        + ${pkg.shippingFee} shipping & handling
+                    {pkg.shippingFee > 0 ? (
+                      <span className="text-xs font-black text-brand-navy-600 uppercase tracking-wider mt-0.5">
+                        +$19.95 India Shipping
+                      </span>
+                    ) : (
+                      <span className="inline-flex px-3 py-1 rounded bg-yellow-300 text-yellow-950 text-xs font-black uppercase tracking-wider shadow-sm mt-0.5">
+                        +FREE India Shipping
                       </span>
                     )}
+                    <span className="text-xs font-bold text-brand-navy-700 uppercase tracking-wider mt-1.5">
+                      180-Day Guarantee
+                    </span>
                   </div>
                 </div>
 
                 {/* CTA Button */}
                 <div className="pt-2">
                   <a
-                    href={CONFIG.AFFILIATE_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={isDisabled ? "#" : affiliateUrl}
+                    target={isDisabled ? undefined : "_blank"}
+                    rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+                    onClick={(e) => {
+                      if (isDisabled) {
+                        e.preventDefault();
+                      }
+                    }}
                     className={cn(
                       "flex items-center justify-center w-full py-4 rounded-2xl text-sm font-black transition-all shadow-md active:scale-98",
-                      isBestValue
+                      isDisabled
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+                        : isBestValue
                         ? "text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-brand-accent-600/10 hover:shadow-lg hover:shadow-brand-accent-600/20"
                         : isPopular
                         ? "text-white bg-brand-primary-700 hover:bg-brand-primary-800"
@@ -180,7 +203,7 @@ export default function Pricing() {
                     )}
                     id={`pricing-cta-${pkg.id}`}
                   >
-                    Add to Cart & Order
+                    {isDisabled ? "Currently Unavailable" : "Add to Cart & Order"}
                   </a>
                 </div>
               </div>

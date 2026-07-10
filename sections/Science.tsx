@@ -1,8 +1,15 @@
 "use client";
 
 import { Award, ShieldCheck, Heart, Sparkles, Activity, ArrowRight } from "lucide-react";
+import { useAffiliateUrl } from "@/lib/settingsContext";
+import { cn } from "@/lib/utils";
 
 export default function Science() {
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "science"
+  });
+
   const points = [
     {
       title: "Enhanced Cushioning",
@@ -27,7 +34,7 @@ export default function Science() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-brand-navy-50/50 border-y border-brand-navy-100" id="science">
+    <section className="py-12 sm:py-16 bg-brand-navy-50/50 border-y border-brand-navy-100" id="science">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Lead Alert Banner */}
@@ -120,17 +127,27 @@ export default function Science() {
               ))}
             </div>
 
-            {/* Action Area */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white border border-brand-navy-100 rounded-3xl p-6 shadow-sm">
-              <span className="text-xs font-bold text-brand-navy-500 uppercase tracking-wider text-center sm:text-left">
-                Experience full joint recovery
-              </span>
+            {/* Action Area (Updated layout) */}
+            <div className="flex flex-col items-center gap-6 mt-12 text-center">
+              <h4 className="font-display font-extrabold text-lg sm:text-xl text-brand-navy-900">
+                Experience Full Joint Recovery
+              </h4>
               <a
-                href="#pricing"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-md shadow-brand-accent-600/10 transition-all active:scale-98"
+                href={isDisabled ? "#" : affiliateUrl}
+                target={isDisabled ? undefined : "_blank"}
+                rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+                onClick={(e) => {
+                  if (isDisabled) {
+                    e.preventDefault();
+                  }
+                }}
+                className={cn(
+                  "inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200",
+                  isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+                )}
               >
-                BUY NOW!
-                <ArrowRight className="w-4 h-4" />
+                {isDisabled ? "CURRENTLY UNAVAILABLE" : "BUY NOW!"}
+                {!isDisabled && <ArrowRight className="w-5 h-5" />}
               </a>
             </div>
 

@@ -2,8 +2,15 @@
 
 import React from "react";
 import { Pill, Droplets, Dumbbell, Apple, ArrowRight } from "lucide-react";
+import { useAffiliateUrl } from "@/lib/settingsContext";
+import { cn } from "@/lib/utils";
 
 export default function HowToConsume() {
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "how_to_consume"
+  });
+
   const steps = [
     {
       title: "1. Take Joint Genesis™ Correctly Every Day",
@@ -28,7 +35,7 @@ export default function HowToConsume() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-brand-navy-50/50 border-y border-brand-navy-100" id="how-to-consume">
+    <section className="py-12 sm:py-16 bg-brand-navy-50/50 border-y border-brand-navy-100" id="how-to-consume">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -70,11 +77,21 @@ export default function HowToConsume() {
         {/* Bottom CTA Button */}
         <div className="flex justify-center mt-12">
           <a
-            href="#pricing"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200"
+            href={isDisabled ? "#" : affiliateUrl}
+            target={isDisabled ? undefined : "_blank"}
+            rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+            onClick={(e) => {
+              if (isDisabled) {
+                e.preventDefault();
+              }
+            }}
+            className={cn(
+              "inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 active:scale-98 transition-all duration-200",
+              isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+            )}
           >
-            TRY NOW!
-            <ArrowRight className="w-5 h-5" />
+            {isDisabled ? "CURRENTLY UNAVAILABLE" : "TRY NOW!"}
+            {!isDisabled && <ArrowRight className="w-5 h-5" />}
           </a>
         </div>
 

@@ -1,0 +1,29 @@
+# Tasks - Fix Affiliate Hoplink Integration
+
+- `[x]` Create centralized settings provider and hook in `lib/settingsContext.tsx`
+- `[x]` Clean up hardcoded ClickBank URLs in `lib/config.ts` and `lib/settingsService.ts`
+- `[x]` Integrate `WebsiteSettingsProvider` in root `app/layout.tsx`
+- `[x]` Update Admin Settings form (`SettingsForm.tsx`) to handle warnings and allow empty links
+- `[x]` Update CTA buttons to use the dynamic hoplink:
+  - `[x]` `Navbar.tsx`
+  - `[x]` `StickyCTA.tsx`
+  - `[x]` `Hero.tsx`
+  - `[x]` `Pricing.tsx`
+  - `[x]` `Science.tsx`
+  - `[x]` `HowToConsume.tsx`
+  - `[x]` `Ingredients.tsx`
+  - `[x]` `HowItWorks.tsx`
+  - `[x]` `FinalCTA.tsx`
+  - `[x]` `Benefits.tsx`
+  - `[x]` `Bonuses.tsx`
+- `[x]` Verify changes with a project build and manual validation
+- `[x]` Clean up "Made in USA", "FDA Approved", "GMP Certified", and "100% Natural" badges from the Hero section
+- `[x]` Remove HTML-rendered Supplement Facts Card and retain physical facts label image
+- `[x]` Refactor single-row/container CTA banners to centered layout with text on top and button below
+- `[x]` Reduce vertical padding from `py-20 sm:py-28`/`py-20 sm:py-24` to `py-12 sm:py-16` across all landing page sections
+- `[x]` Update pricing package counts, discounts, shipping fees, and savings to align with screenshot details
+- `[x]` Correct savings calculations and discount percentages from $540/70% to maximum of $180 (Save $180) across the site
+- `[x]` Re-arrange footer compliance links (Terms, Privacy, Disclaimer) onto a single centered row positioned directly before the ClickBank disclosure paragraph
+- `[x]` Fix footer same-page scroll navigation link target anchors
+- `[x]` Convert testimonials grid layout to a touch-swipe responsive snap-scroll carousel slider with indicators and controls
+- `[x]` Redesign Supplement Facts layout to use a centered, single-column stack and style bottom details in card grids

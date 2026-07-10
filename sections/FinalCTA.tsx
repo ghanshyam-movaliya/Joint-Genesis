@@ -2,10 +2,17 @@
 
 import React from "react";
 import { ArrowRight, Star } from "lucide-react";
+import { useAffiliateUrl } from "@/lib/settingsContext";
+import { cn } from "@/lib/utils";
 
 export default function FinalCTA() {
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "final_cta"
+  });
+
   return (
-    <section className="py-20 sm:py-28 bg-brand-navy-50/50 border-t border-brand-navy-100" id="final-cta">
+    <section className="py-12 sm:py-16 bg-brand-navy-50/50 border-t border-brand-navy-100" id="final-cta">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-br from-brand-navy-900 via-brand-navy-950 to-brand-navy-950 text-white rounded-[40px] p-8 sm:p-12 md:p-16 border border-white/10 text-center relative overflow-hidden shadow-2xl">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-primary-800/20 via-transparent to-transparent pointer-events-none" />
@@ -26,7 +33,7 @@ export default function FinalCTA() {
             <div className="h-0.5 w-16 bg-brand-accent-500 my-2" />
 
             <h3 className="font-display font-black text-2xl sm:text-3xl text-brand-accent-400">
-              Today&apos;s Price: $39/per bottle
+              Today&apos;s Price: $49/per bottle
             </h3>
 
             <p className="text-sm text-brand-navy-300 max-w-md leading-relaxed">
@@ -35,11 +42,21 @@ export default function FinalCTA() {
 
             <div className="mt-4">
               <a
-                href="#pricing"
-                className="inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl hover:shadow-brand-accent-600/20 hover:-translate-y-0.5 active:scale-98 transition-all duration-200"
+                href={isDisabled ? "#" : affiliateUrl}
+                target={isDisabled ? undefined : "_blank"}
+                rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+                onClick={(e) => {
+                  if (isDisabled) {
+                    e.preventDefault();
+                  }
+                }}
+                className={cn(
+                  "inline-flex items-center gap-2 px-10 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl hover:shadow-brand-accent-600/20 hover:-translate-y-0.5 active:scale-98 transition-all duration-200",
+                  isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+                )}
               >
-                Get 70% Discount Now!
-                <ArrowRight className="w-5 h-5" />
+                {isDisabled ? "Currently Unavailable" : "Get Your Discount Now!"}
+                {!isDisabled && <ArrowRight className="w-5 h-5" />}
               </a>
             </div>
 

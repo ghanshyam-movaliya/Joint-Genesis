@@ -3,7 +3,7 @@ import { CONFIG } from "@/lib/config";
 
 export default function Guarantee() {
   return (
-    <section className="py-20 sm:py-24 bg-brand-navy-950 text-white border-t border-brand-navy-900 relative overflow-hidden" id="guarantee-section">
+    <section className="py-12 sm:py-16 bg-brand-navy-950 text-white border-t border-brand-navy-900 relative overflow-hidden" id="guarantee-section">
       {/* Background ambient radial light */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[350px] h-[350px] bg-brand-accent-950/20 blur-3xl rounded-full pointer-events-none" />
 

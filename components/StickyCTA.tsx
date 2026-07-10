@@ -2,11 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { ArrowRight, Star } from "lucide-react";
-import { CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
+import { useAffiliateUrl } from "@/lib/settingsContext";
 
 export default function StickyCTA() {
   const [isVisible, setIsVisible] = useState(false);
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "sticky_cta"
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,7 +59,7 @@ export default function StickyCTA() {
               </div>
             </div>
             <p className="text-xs text-brand-navy-500 font-semibold mt-0.5">
-              Save up to $540 + Free Shipping
+              Save up to $180 + Free Shipping
             </p>
           </div>
         </div>
@@ -67,14 +71,22 @@ export default function StickyCTA() {
               Special Affiliate Offer
             </span>
             <span className="text-sm font-extrabold text-brand-primary-800">
-              Only $39 / Bottle
+              Only $49 / Bottle
             </span>
           </div>
           <a
-            href={CONFIG.AFFILIATE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-brand-accent-600 hover:bg-brand-accent-700 active:bg-brand-accent-800 shadow-md shadow-brand-accent-600/10 active:scale-98 transition-all duration-200"
+            href={isDisabled ? "#" : affiliateUrl}
+            target={isDisabled ? undefined : "_blank"}
+            rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+            onClick={(e) => {
+              if (isDisabled) {
+                e.preventDefault();
+              }
+            }}
+            className={cn(
+              "inline-flex items-center gap-2 px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-brand-accent-600 hover:bg-brand-accent-700 active:bg-brand-accent-800 shadow-md shadow-brand-accent-600/10 active:scale-98 transition-all duration-200",
+              isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+            )}
             id="sticky-cta-btn"
           >
             Order Now

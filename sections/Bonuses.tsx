@@ -2,8 +2,15 @@
 
 import React from "react";
 import { Gift, ArrowRight } from "lucide-react";
+import { useAffiliateUrl } from "@/lib/settingsContext";
+import { cn } from "@/lib/utils";
 
 export default function Bonuses() {
+  const { affiliateUrl, isDisabled } = useAffiliateUrl({
+    utm_source: "website",
+    utm_medium: "bonuses"
+  });
+
   const bonuses = [
     {
       title: "17 Joint Supporting Smoothies",
@@ -18,7 +25,7 @@ export default function Bonuses() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-white overflow-hidden" id="bonuses">
+    <section className="py-12 sm:py-16 bg-white overflow-hidden" id="bonuses">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
@@ -48,11 +55,21 @@ export default function Bonuses() {
 
             <div className="mt-4">
               <a
-                href="#pricing"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl active:scale-98 transition-all duration-200"
+                href={isDisabled ? "#" : affiliateUrl}
+                target={isDisabled ? undefined : "_blank"}
+                rel={isDisabled ? undefined : "noopener noreferrer sponsored"}
+                onClick={(e) => {
+                  if (isDisabled) {
+                    e.preventDefault();
+                  }
+                }}
+                className={cn(
+                  "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-base font-black text-white bg-brand-accent-600 hover:bg-brand-accent-700 shadow-lg shadow-brand-accent-600/10 hover:shadow-xl active:scale-98 transition-all duration-200",
+                  isDisabled && "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+                )}
               >
-                Claim Your Free Bonuses Now !
-                <ArrowRight className="w-5 h-5" />
+                {isDisabled ? "Currently Unavailable" : "Claim Your Free Bonuses Now !"}
+                {!isDisabled && <ArrowRight className="w-5 h-5" />}
               </a>
             </div>
 
