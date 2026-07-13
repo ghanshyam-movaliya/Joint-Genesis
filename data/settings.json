@@ -1,18 +1,17 @@
 {
-  "websiteName": "Joint Genesis™",
-  "domain": "en-jointgenesis.com",
-  "affiliateLink": "https://d6cbefygokgk3x0ewc1phaxw0d.hop.clickbank.net",
+  "websiteName": "Joint Genesis Website™",
+  "domain": "jointgeneshis.com",
+  "affiliateLink": "https://fenil-vaghasiya-portfolio.vercel.app/",
   "supportEmail": "support@biodynamix.co",
   "supportPhone": "1-800-473-5188",
-  "websiteUrl": "https://en-jointgenesis.com",
-  "footerText": "Copyright 2026 - Joint Genesis™ All Rights Reserved.",
+  "websiteUrl": "https://jointgeneshis.com",
+  "footerText": "Copyright 3000 - Joint Genesis™ All Rights Reserved.",
   "defaultAuthor": "Dr. Mark Weis",
-  "defaultTitle": "Joint Genesis™ | Official Website USA | Advanced Joint Health & Mobility Support",
-  "defaultDescription": "Joint Genesis is an advanced joint support supplement formulated to promote mobility, flexibility, healthy joint lubrication, and cartilage support. Buy from the official USA site.\n",
+  "defaultTitle": "Joint Genesis™ USA",
+  "defaultDescription": "Discover Joint Genesis™",
   "defaultKeywords": [
-    "Joint Genesis",
-    "BioDynamix",
-    "joint health supplement",
-    "joint lubrication"
-  ]
+    "Joint Genesis"
+  ],
+  "googleVerification": "google-code",
+  "bingVerification": "bing-code"
 }

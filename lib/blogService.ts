@@ -23,7 +23,7 @@ export interface Post {
 }
 
 // Internal JSON database storage layout
-interface StoredBlog {
+export interface StoredBlog {
   id: string;
   slug: string;
   title: string;

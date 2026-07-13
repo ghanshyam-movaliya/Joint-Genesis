@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
+import SessionProvider from "@/components/SessionProvider";
+import { getSettings } from "@/lib/settingsService";
+import { WebsiteSettingsProvider } from "@/lib/settingsContext";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -14,33 +17,39 @@ const inter = Inter({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Joint Genesis™ | Support Rejuvenated Joint Comfort & Mobility",
-    template: "%s | Joint Genesis™",
-  },
-  description: "Discover Joint Genesis™, the doctor-formulated supplement that targets the root cause of age-related joint stiffness by supporting healthy synovial fluid.",
-  keywords: ["Joint Genesis", "BioDynamix", "joint health supplement", "joint lubrication", "synovial fluid", "joint pain relief"],
-  authors: [{ name: "BioDynamix" }],
-  openGraph: {
-    title: "Joint Genesis™ | Support Rejuvenated Joint Comfort & Mobility",
-    description: "Discover Joint Genesis™, the doctor-formulated supplement that targets the root cause of age-related joint stiffness by supporting healthy synovial fluid.",
-    type: "website",
-    locale: "en_US",
-    url: "https://en-jointgenesis.com",
-    siteName: "Joint Genesis™",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Joint Genesis™ | Rejuvenate Your Joint Health",
-    description: "Doctor-formulated joint health supplement targeting synovial fluid support.",
-  },
-  metadataBase: new URL("https://en-jointgenesis.com"),
-};
-
-import SessionProvider from "@/components/SessionProvider";
-import { getSettings } from "@/lib/settingsService";
-import { WebsiteSettingsProvider } from "@/lib/settingsContext";
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  
+  return {
+    title: {
+      default: settings.defaultTitle || "Joint Genesis™ | Support Rejuvenated Joint Comfort & Mobility",
+      template: `%s | ${settings.websiteName || "Joint Genesis™"}`,
+    },
+    description: settings.defaultDescription || "Discover Joint Genesis™, the doctor-formulated supplement that targets the root cause of age-related joint stiffness by supporting healthy synovial fluid.",
+    keywords: settings.defaultKeywords || ["Joint Genesis", "BioDynamix", "joint health supplement", "joint lubrication", "synovial fluid", "joint pain relief"],
+    authors: [{ name: settings.defaultAuthor || "BioDynamix" }],
+    openGraph: {
+      title: settings.defaultTitle || "Joint Genesis™ | Support Rejuvenated Joint Comfort & Mobility",
+      description: settings.defaultDescription || "Discover Joint Genesis™, the doctor-formulated supplement that targets the root cause of age-related joint stiffness by supporting healthy synovial fluid.",
+      type: "website",
+      locale: "en_US",
+      url: settings.websiteUrl || "https://en-jointgenesis.com",
+      siteName: settings.websiteName || "Joint Genesis™",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: settings.defaultTitle || "Joint Genesis™ | Rejuvenate Your Joint Health",
+      description: settings.defaultDescription || "Doctor-formulated joint health supplement targeting synovial fluid support.",
+    },
+    metadataBase: new URL(settings.websiteUrl || "https://en-jointgenesis.com"),
+    verification: {
+      google: settings.googleVerification || undefined,
+      other: settings.bingVerification ? {
+        'msvalidate.01': [settings.bingVerification],
+      } : undefined,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

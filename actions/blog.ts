@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Post } from "@/lib/blogService";
+import { Post, StoredBlog } from "@/lib/blogService";
 import { updateSettings, WebsiteSettings } from "@/lib/settingsService";
 import { SeoSettings } from "@/lib/seoService";
 import { getServerSession } from "next-auth/next";
@@ -183,8 +183,8 @@ export async function getAdminDashboardDataAction() {
     try {
       if (fs.existsSync(blogsFilePath)) {
         const blogsRaw = fs.readFileSync(blogsFilePath, "utf8");
-        const blogs = JSON.parse(blogsRaw || "[]");
-        blogsCount = blogs.filter((b: any) => b.status === "published").length;
+        const blogs: StoredBlog[] = JSON.parse(blogsRaw || "[]");
+        blogsCount = blogs.filter((b) => b.status === "published").length;
       }
     } catch (e) {
       console.error(e);
@@ -260,6 +260,8 @@ export async function saveSettingsAction(
       defaultTitle: seo.defaultTitle,
       defaultDescription: seo.defaultDescription,
       defaultKeywords: seo.defaultKeywords,
+      googleVerification: seo.googleVerification,
+      bingVerification: seo.bingVerification,
     };
     await updateSettings(mergedSettings);
 
