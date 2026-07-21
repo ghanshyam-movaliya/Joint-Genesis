@@ -122,7 +122,7 @@
     "keywords": [],
     "publishedDate": "2026-07-06",
     "readingTime": "1 min read",
-    "status": "published",
+    "status": "draft",
     "content": "this is today's blog "
   },
   {
@@ -136,21 +136,7 @@
     "keywords": [],
     "publishedDate": "2026-07-21",
     "readingTime": "1 min read",
-    "status": "pending_publish",
+    "status": "published",
     "content": "today's blog"
-  },
-  {
-    "id": "blog_1784658627598",
-    "slug": "2nd-blog",
-    "title": "2nd blog ",
-    "author": "Editorial Team",
-    "image": "https://lh3.googleusercontent.com/d/15bGA3pFc-ih99LOYrmO1igN6tqUcQpko",
-    "seoTitle": "2nd blog ",
-    "seoDescription": "2nd blog ",
-    "keywords": [],
-    "publishedDate": "2026-07-21",
-    "readingTime": "1 min read",
-    "status": "pending_publish",
-    "content": "this is 2nd blog"
   }
 ]
