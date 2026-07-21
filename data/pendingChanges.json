@@ -1,8 +1,14 @@
 {
-  "added": [],
+  "added": [
+    {
+      "id": "blog_1784657967334",
+      "title": "21st july blog",
+      "slug": "21st-july-blog"
+    }
+  ],
   "updated": [],
   "deleted": [],
-  "addedCount": 0,
+  "addedCount": 1,
   "updatedCount": 0,
   "deletedCount": 0
 }

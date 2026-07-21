@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import { Post } from "@/lib/blogService";
+import { commitAndPushBlogs } from "./githubService";
 
 export interface StoredBlog {
   id: string;
@@ -20,6 +22,48 @@ export interface StoredBlog {
 const blogsFilePath = path.join(process.cwd(), "data", "blogs.json");
 const draftsFilePath = path.join(process.cwd(), "data", "drafts.json");
 const pendingChangesFilePath = path.join(process.cwd(), "data", "pendingChanges.json");
+
+const tmpDraftsFilePath = path.join(os.tmpdir(), "drafts.json");
+const tmpPendingChangesFilePath = path.join(os.tmpdir(), "pendingChanges.json");
+const tmpBlogsFilePath = path.join(os.tmpdir(), "blogs.json");
+
+/**
+ * Helper to write file safely (tries primary path first, falls back to /tmp if read-only)
+ */
+function safeWriteFile(primaryPath: string, tmpPath: string | null, content: string): void {
+  try {
+    fs.writeFileSync(primaryPath, content, "utf8");
+  } catch (err) {
+    if (tmpPath) {
+      try {
+        fs.writeFileSync(tmpPath, content, "utf8");
+      } catch (tmpErr) {
+        console.warn("Unable to write to fallback tmp path:", tmpErr);
+      }
+    }
+  }
+}
+
+/**
+ * Helper to read file safely (checks /tmp first if present, then primary path)
+ */
+function safeReadFile(primaryPath: string, tmpPath: string | null): string | null {
+  if (tmpPath && fs.existsSync(tmpPath)) {
+    try {
+      return fs.readFileSync(tmpPath, "utf8");
+    } catch (e) {
+      // Fall through
+    }
+  }
+  if (fs.existsSync(primaryPath)) {
+    try {
+      return fs.readFileSync(primaryPath, "utf8");
+    } catch (e) {
+      return null;
+    }
+  }
+  return null;
+}
 
 /**
  * Maps StoredBlog database format to the UI-compatible Post format
@@ -83,10 +127,10 @@ export function mapPostToStored(post: Post): StoredBlog {
  */
 function readBlogsFile(): StoredBlog[] {
   try {
-    if (!fs.existsSync(blogsFilePath)) {
+    const rawData = safeReadFile(blogsFilePath, tmpBlogsFilePath);
+    if (!rawData) {
       return [];
     }
-    const rawData = fs.readFileSync(blogsFilePath, "utf8");
     return JSON.parse(rawData || "[]");
   } catch (error) {
     console.error("Failed to read local blogs.json file:", error);
@@ -99,12 +143,13 @@ function readBlogsFile(): StoredBlog[] {
  */
 export function readDraftsFile(): StoredBlog[] {
   try {
-    if (!fs.existsSync(draftsFilePath)) {
+    const rawData = safeReadFile(draftsFilePath, tmpDraftsFilePath);
+    if (!rawData) {
       const blogs = readBlogsFile();
-      fs.writeFileSync(draftsFilePath, JSON.stringify(blogs, null, 2), "utf8");
+      const jsonText = JSON.stringify(blogs, null, 2);
+      safeWriteFile(draftsFilePath, tmpDraftsFilePath, jsonText);
       return blogs;
     }
-    const rawData = fs.readFileSync(draftsFilePath, "utf8");
     return JSON.parse(rawData || "[]");
   } catch (error) {
     console.error("Failed to read local drafts.json file:", error);
@@ -117,11 +162,19 @@ export function readDraftsFile(): StoredBlog[] {
  */
 export function saveDraftsFile(drafts: StoredBlog[]): void {
   try {
-    fs.writeFileSync(draftsFilePath, JSON.stringify(drafts, null, 2), "utf8");
+    const jsonText = JSON.stringify(drafts, null, 2);
+    safeWriteFile(draftsFilePath, tmpDraftsFilePath, jsonText);
     // Automatically recalculate and write pending changes
     calculateAndWritePendingChanges(drafts);
+
+    // Sync drafts.json directly to GitHub repository if credentials exist
+    if (process.env.GITHUB_TOKEN && process.env.GITHUB_OWNER && process.env.GITHUB_REPO) {
+      commitAndPushBlogs("data/drafts.json", jsonText, "chore(cms): update drafts.json").catch((err) => {
+        console.warn("Background GitHub commit for drafts.json failed:", err);
+      });
+    }
   } catch (error) {
-    console.error("Failed to write local drafts.json file:", error);
+    console.error("Failed to write drafts file:", error);
   }
 }
 
@@ -299,7 +352,7 @@ export function calculateAndWritePendingChanges(currentDrafts?: StoredBlog[]): P
   summary.deletedCount = summary.deleted.length;
 
   try {
-    fs.writeFileSync(pendingChangesFilePath, JSON.stringify(summary, null, 2), "utf8");
+    safeWriteFile(pendingChangesFilePath, tmpPendingChangesFilePath, JSON.stringify(summary, null, 2));
   } catch (error) {
     console.error("Failed to write pendingChanges.json:", error);
   }

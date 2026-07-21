@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import { uploadImage } from "@/lib/googleDrive";
 import { commitAndPushBlogs } from "./githubService";
 import {
@@ -12,6 +13,41 @@ import {
 
 const blogsFilePath = path.join(process.cwd(), "data", "blogs.json");
 const deploymentHistoryFilePath = path.join(process.cwd(), "data", "deploymentHistory.json");
+
+const tmpBlogsFilePath = path.join(os.tmpdir(), "blogs.json");
+const tmpDeploymentHistoryFilePath = path.join(os.tmpdir(), "deploymentHistory.json");
+
+function safeWriteFile(primaryPath: string, tmpPath: string | null, content: string): void {
+  try {
+    fs.writeFileSync(primaryPath, content, "utf8");
+  } catch (err) {
+    if (tmpPath) {
+      try {
+        fs.writeFileSync(tmpPath, content, "utf8");
+      } catch (tmpErr) {
+        console.warn("Unable to write to fallback tmp path:", tmpErr);
+      }
+    }
+  }
+}
+
+function safeReadFile(primaryPath: string, tmpPath: string | null): string | null {
+  if (tmpPath && fs.existsSync(tmpPath)) {
+    try {
+      return fs.readFileSync(tmpPath, "utf8");
+    } catch (e) {
+      // Fall through
+    }
+  }
+  if (fs.existsSync(primaryPath)) {
+    try {
+      return fs.readFileSync(primaryPath, "utf8");
+    } catch (e) {
+      return null;
+    }
+  }
+  return null;
+}
 
 export interface DeploymentRecord {
   id: string;
@@ -35,7 +71,7 @@ export async function publishChanges(
   const drafts = readDraftsFile();
   
   // 1. Scan for base64 data URIs and upload to Google Drive if needed
-  let updatedDrafts = [...drafts];
+  const updatedDrafts = [...drafts];
   let imageUploadCount = 0;
 
   for (let i = 0; i < updatedDrafts.length; i++) {
@@ -106,13 +142,9 @@ export async function publishChanges(
   const commitDescription = `Publish blog changes: Added: ${summary.addedCount}, Updated: ${summary.updatedCount}, Deleted: ${summary.deletedCount}`;
   const fullCommitMessage = `${commitMessage}\n\n${commitDescription}`;
 
-  // 3. Write blogs.json locally
+  // 3. Write blogs.json locally (or to /tmp if read-only)
   const blogsJsonText = JSON.stringify(productionBlogs, null, 2);
-  try {
-    fs.writeFileSync(blogsFilePath, blogsJsonText, "utf8");
-  } catch (error) {
-    console.warn("Unable to write blogs.json locally:", error);
-  }
+  safeWriteFile(blogsFilePath, tmpBlogsFilePath, blogsJsonText);
 
   // 4. Commit and Push blogs.json to GitHub
   let commitSha = "";
@@ -146,8 +178,8 @@ export async function publishChanges(
   // 6. Record this publish run in deploymentHistory.json
   try {
     let history: DeploymentRecord[] = [];
-    if (fs.existsSync(deploymentHistoryFilePath)) {
-      const rawHistory = fs.readFileSync(deploymentHistoryFilePath, "utf8");
+    const rawHistory = safeReadFile(deploymentHistoryFilePath, tmpDeploymentHistoryFilePath);
+    if (rawHistory) {
       history = JSON.parse(rawHistory || "[]");
     }
 
@@ -169,7 +201,7 @@ export async function publishChanges(
       history = history.slice(0, 50);
     }
 
-    fs.writeFileSync(deploymentHistoryFilePath, JSON.stringify(history, null, 2), "utf8");
+    safeWriteFile(deploymentHistoryFilePath, tmpDeploymentHistoryFilePath, JSON.stringify(history, null, 2));
   } catch (e) {
     console.error("Failed to append deployment history:", e);
   }
@@ -186,9 +218,9 @@ export function updateDeploymentHistoryStatus(
   durationMs?: number
 ): void {
   try {
-    if (!fs.existsSync(deploymentHistoryFilePath)) return;
+    const rawHistory = safeReadFile(deploymentHistoryFilePath, tmpDeploymentHistoryFilePath);
+    if (!rawHistory) return;
     
-    const rawHistory = fs.readFileSync(deploymentHistoryFilePath, "utf8");
     const history: DeploymentRecord[] = JSON.parse(rawHistory || "[]");
     
     const index = history.findIndex((h) => h.commitSha === commitSha);
@@ -206,7 +238,7 @@ export function updateDeploymentHistoryStatus(
         const secs = seconds % 60;
         history[index].duration = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
       }
-      fs.writeFileSync(deploymentHistoryFilePath, JSON.stringify(history, null, 2), "utf8");
+      safeWriteFile(deploymentHistoryFilePath, tmpDeploymentHistoryFilePath, JSON.stringify(history, null, 2));
     }
   } catch (e) {
     console.error("Failed to update deployment history status:", e);
