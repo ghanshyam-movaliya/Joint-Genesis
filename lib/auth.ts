@@ -31,6 +31,14 @@ export interface ExtendedSession extends Session {
  */
 async function refreshAccessToken(token: ExtendedJWT): Promise<ExtendedJWT> {
   try {
+    if (!token.refreshToken) {
+      console.warn("[NextAuth] No refresh token available on token object. User needs to re-authenticate.");
+      return {
+        ...token,
+        error: "RefreshAccessTokenError",
+      };
+    }
+
     const url = "https://oauth2.googleapis.com/token";
     const response = await fetch(url, {
       method: "POST",
@@ -41,13 +49,14 @@ async function refreshAccessToken(token: ExtendedJWT): Promise<ExtendedJWT> {
         client_id: process.env.GOOGLE_CLIENT_ID || "",
         client_secret: process.env.GOOGLE_CLIENT_SECRET || "",
         grant_type: "refresh_token",
-        refresh_token: token.refreshToken || "",
+        refresh_token: token.refreshToken,
       }),
     });
 
     const refreshedTokens = await response.json();
 
     if (!response.ok) {
+      console.error("[NextAuth] Google token refresh failed with status", response.status, refreshedTokens);
       throw refreshedTokens;
     }
 
@@ -58,7 +67,8 @@ async function refreshAccessToken(token: ExtendedJWT): Promise<ExtendedJWT> {
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token if new one is not returned
     };
   } catch (error) {
-    console.error("Error refreshing access token:", error);
+    const errorMsg = typeof error === "object" && error !== null ? JSON.stringify(error) : String(error);
+    console.error(`[NextAuth] Error refreshing access token: ${errorMsg}`);
     return {
       ...token,
       error: "RefreshAccessTokenError",
@@ -89,14 +99,14 @@ export const authOptions: NextAuthOptions = {
           expiresAt: account.expires_at 
             ? (account.expires_at as number) * 1000 
             : Date.now() + ((account.expires_in as number) || 3600) * 1000,
-          refreshToken: account.refresh_token,
+          refreshToken: account.refresh_token ?? token.refreshToken,
           user,
         };
       }
 
       // If token is not expired yet, return it
       const extendedToken = token as ExtendedJWT;
-      if (Date.now() < (extendedToken.expiresAt as number)) {
+      if (extendedToken.expiresAt && Date.now() < (extendedToken.expiresAt as number)) {
         return extendedToken;
       }
 

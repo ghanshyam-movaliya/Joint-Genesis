@@ -10,7 +10,7 @@ export default async function AdminSettingsPage() {
   // Check NextAuth session on server
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session || (session as { error?: string })?.error === "RefreshAccessTokenError") {
     redirect("/admin");
   }
 

@@ -7,8 +7,8 @@ import { authOptions, ExtendedSession } from "@/lib/auth";
 export async function deleteImageAction(fileId: string) {
   try {
     const session = (await getServerSession(authOptions)) as ExtendedSession | null;
-    if (!session || !session.accessToken) {
-      throw new Error("Unauthorized. Please authenticate via Google first.");
+    if (!session || !session.accessToken || session.error === "RefreshAccessTokenError") {
+      throw new Error("Unauthorized. Google authentication session has expired. Please log in again.");
     }
 
     if (!fileId) {

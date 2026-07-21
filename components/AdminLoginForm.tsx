@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Lock, Loader2 } from "lucide-react";
+import AdminSignOutButton from "@/components/AdminSignOutButton";
 
 export default function AdminLoginForm() {
   const [loading, setLoading] = useState(false);
@@ -89,6 +90,11 @@ export default function AdminLoginForm() {
                 </>
               )}
             </button>
+
+            <div className="pt-2 border-t border-brand-navy-100 text-center flex flex-col items-center gap-2">
+              <span className="text-[11px] text-brand-navy-400 font-medium">Having trouble signing in or stuck with a stale session?</span>
+              <AdminSignOutButton variant="subtle" />
+            </div>
 
           </div>
 

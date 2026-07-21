@@ -11,8 +11,8 @@ export default async function AdminPage() {
   // Check NextAuth session on server
   const session = await getServerSession(authOptions);
 
-  // Render Login Panel if session is not authenticated
-  if (!session) {
+  // Render Login Panel if session is missing or refresh token expired/failed
+  if (!session || (session as { error?: string })?.error === "RefreshAccessTokenError") {
     return <AdminLoginForm />;
   }
 

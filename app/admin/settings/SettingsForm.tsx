@@ -7,6 +7,7 @@ import Link from "next/link";
 import { WebsiteSettings } from "@/lib/settingsService";
 import { SeoSettings } from "@/lib/seoService";
 import { saveSettingsAction } from "@/actions/blog";
+import AdminSignOutButton from "@/components/AdminSignOutButton";
 
 interface SettingsFormProps {
   settings: WebsiteSettings;
@@ -102,30 +103,33 @@ export default function SettingsForm({ settings, seo }: SettingsFormProps) {
           </p>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className={`inline-flex items-center justify-center gap-2 px-6 py-3.5 disabled:bg-brand-primary-400 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all w-full sm:w-auto active:scale-98 ${
-            success ? "bg-emerald-600 hover:bg-emerald-700" : "bg-brand-primary-700 hover:bg-brand-primary-800"
-          }`}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Saving Settings...
-            </>
-          ) : success ? (
-            <>
-              <Check className="w-4 h-4" />
-              Settings Saved!
-            </>
-          ) : (
-            <>
-              <Save className="w-4 h-4" />
-              Save Settings
-            </>
-          )}
-        </button>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <button
+            type="submit"
+            disabled={loading}
+            className={`inline-flex items-center justify-center gap-2 px-6 py-3.5 disabled:bg-brand-primary-400 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all w-full sm:w-auto active:scale-98 ${
+              success ? "bg-emerald-600 hover:bg-emerald-700" : "bg-brand-primary-700 hover:bg-brand-primary-800"
+            }`}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Saving Settings...
+              </>
+            ) : success ? (
+              <>
+                <Check className="w-4 h-4" />
+                Settings Saved!
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                Save Settings
+              </>
+            )}
+          </button>
+          <AdminSignOutButton />
+        </div>
       </div>
 
       {error && (

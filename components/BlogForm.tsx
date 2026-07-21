@@ -8,6 +8,7 @@ import { Post } from "@/lib/blogService";
 import { saveBlogAction } from "@/actions/blog";
 import ImageUploader from "@/components/ImageUploader";
 import { cn } from "@/lib/utils";
+import AdminSignOutButton from "@/components/AdminSignOutButton";
 
 interface BlogFormProps {
   post?: Post | null; // Null if creating new blog
@@ -134,29 +135,32 @@ export default function BlogForm({ post }: BlogFormProps) {
           </h1>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading || isDeploymentRunning}
-          style={{ cursor: (loading || isDeploymentRunning) ? "not-allowed" : "pointer" }}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-primary-700 hover:bg-brand-primary-800 disabled:bg-brand-primary-400 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all w-full sm:w-auto active:scale-98"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Saving Post...
-            </>
-          ) : isDeploymentRunning ? (
-            <>
-              <Save className="w-4 h-4" />
-              Locked - Deploying...
-            </>
-          ) : (
-            <>
-              <Save className="w-4 h-4" />
-              Save Blog Post
-            </>
-          )}
-        </button>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <button
+            type="submit"
+            disabled={loading || isDeploymentRunning}
+            style={{ cursor: (loading || isDeploymentRunning) ? "not-allowed" : "pointer" }}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-primary-700 hover:bg-brand-primary-800 disabled:bg-brand-primary-400 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all w-full sm:w-auto active:scale-98"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Saving Post...
+              </>
+            ) : isDeploymentRunning ? (
+              <>
+                <Save className="w-4 h-4" />
+                Locked - Deploying...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                Save Blog Post
+              </>
+            )}
+          </button>
+          <AdminSignOutButton />
+        </div>
       </div>
 
       {error && (

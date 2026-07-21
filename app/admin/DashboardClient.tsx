@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { publishChangesAction, checkDeploymentStatusAction, getAdminDashboardDataAction } from "@/actions/blog";
 import { cn } from "@/lib/utils";
+import AdminSignOutButton from "@/components/AdminSignOutButton";
 
 // Custom SVG Github icon to bypass lucide-react import version mismatches
 const Github = (props: React.SVGProps<SVGSVGElement>) => (
@@ -40,15 +41,27 @@ const Github = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 interface DashboardClientProps {
-  initialData: any;
+  initialData: Awaited<ReturnType<typeof getAdminDashboardDataAction>>;
 }
 
+const getInitialActiveSha = (d: Awaited<ReturnType<typeof getAdminDashboardDataAction>>) => {
+  if (d.isDeploymentRunning && d.deploymentHistory && d.deploymentHistory.length > 0) {
+    const activeSha = d.deploymentHistory[0].commitSha;
+    if (activeSha && !activeSha.startsWith("N/A")) {
+      return activeSha;
+    }
+  }
+  return null;
+};
+
 export default function DashboardClient({ initialData }: DashboardClientProps) {
+  const initialActiveSha = getInitialActiveSha(initialData);
+
   const [data, setData] = useState(initialData);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showProgressModal, setShowProgressModal] = useState(false);
+  const [showProgressModal, setShowProgressModal] = useState(() => !!initialActiveSha);
   const [publishError, setPublishError] = useState<string | null>(null);
-  const [activeCommitSha, setActiveCommitSha] = useState<string | null>(null);
+  const [activeCommitSha, setActiveCommitSha] = useState<string | null>(() => initialActiveSha);
 
   const stepsList = [
     "Preparing Changes",
@@ -62,9 +75,38 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
     "Website Updated Successfully"
   ];
 
-  const [steps, setSteps] = useState<Array<{ name: string; state: "idle" | "loading" | "success" | "error" }>>(
-    stepsList.map(name => ({ name, state: "idle" }))
-  );
+  const [steps, setSteps] = useState<Array<{ name: string; state: "idle" | "loading" | "success" | "error" }>>(() => {
+    const list: Array<{ name: string; state: "idle" | "loading" | "success" | "error" }> = stepsList.map(name => ({ name, state: "idle" }));
+    if (initialActiveSha) {
+      for (let i = 0; i <= 4; i++) {
+        list[i].state = "success";
+      }
+      list[5].state = "loading";
+    }
+    return list;
+  });
+
+  const [prevIsDeploymentRunning, setPrevIsDeploymentRunning] = useState(initialData.isDeploymentRunning);
+
+  // Sync active deployment state when data updates during render
+  if (data.isDeploymentRunning !== prevIsDeploymentRunning) {
+    setPrevIsDeploymentRunning(data.isDeploymentRunning);
+    if (data.isDeploymentRunning) {
+      const activeSha = getInitialActiveSha(data);
+      if (activeSha && activeSha !== activeCommitSha) {
+        setActiveCommitSha(activeSha);
+        setShowProgressModal(true);
+        setSteps(prev => {
+          const next = [...prev];
+          for (let i = 0; i <= 4; i++) {
+            next[i].state = "success";
+          }
+          next[5].state = "loading";
+          return next;
+        });
+      }
+    }
+  }
 
   // Helper to refresh data from server
   const refreshData = useCallback(async () => {
@@ -131,26 +173,6 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
       if (intervalId) clearInterval(intervalId);
     };
   }, [activeCommitSha, refreshData]);
-
-  // Keep check if there is an active deployment in initial/refreshed state on mount
-  useEffect(() => {
-    if (data.isDeploymentRunning && data.deploymentHistory && data.deploymentHistory.length > 0) {
-      const activeSha = data.deploymentHistory[0].commitSha;
-      if (activeSha && !activeSha.startsWith("N/A")) {
-        setActiveCommitSha(activeSha);
-        setShowProgressModal(true);
-        // Pre-mark first 5 steps as success
-        setSteps(prev => {
-          const next = [...prev];
-          for (let i = 0; i <= 4; i++) {
-            next[i].state = "success";
-          }
-          next[5].state = "loading";
-          return next;
-        });
-      }
-    }
-  }, [data.isDeploymentRunning]);
 
   const handlePublishClick = () => {
     if (data.isDeploymentRunning || activeCommitSha) return;
@@ -226,9 +248,10 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
 
       // Start Polling Vercel status using commit SHA
       setActiveCommitSha(res.commitSha || "");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setPublishError(err.message || "An error occurred during publish.");
+      const errorMessage = err instanceof Error ? err.message : "An error occurred during publish.";
+      setPublishError(errorMessage);
       
       // Mark current step as error
       setSteps(prev => {
@@ -261,6 +284,17 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
     }
   };
 
+  if (!data.success || !data.stats || !data.pendingSummary || !data.statusWidgets) {
+    return (
+      <div className="pt-32 pb-24 min-h-screen flex items-center justify-center">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl max-w-md">
+          <p className="font-bold">Error loading dashboard</p>
+          <p className="text-sm mt-1">{data.error || "An unexpected error occurred."}</p>
+        </div>
+      </div>
+    );
+  }
+
   const { stats, pendingSummary, deploymentHistory, statusWidgets } = data;
 
   return (
@@ -291,6 +325,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
               <RefreshCw className="w-3.5 h-3.5" />
               Sync Status
             </button>
+            <AdminSignOutButton />
           </div>
         </div>
 
@@ -473,7 +508,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                       Added Blogs ({pendingSummary.addedCount})
                     </span>
                     <ul className="divide-y divide-brand-navy-50 border border-brand-navy-50 rounded-xl overflow-hidden bg-brand-navy-50/20">
-                      {pendingSummary.added.map((blog: any) => (
+                      {pendingSummary.added.map((blog) => (
                         <li key={blog.id} className="px-4 py-2.5 text-xs font-semibold text-brand-navy-800 truncate">
                           {blog.title}
                         </li>
@@ -489,7 +524,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                       Updated Blogs ({pendingSummary.updatedCount})
                     </span>
                     <ul className="divide-y divide-brand-navy-50 border border-brand-navy-50 rounded-xl overflow-hidden bg-brand-navy-50/20">
-                      {pendingSummary.updated.map((blog: any) => (
+                      {pendingSummary.updated.map((blog) => (
                         <li key={blog.id} className="px-4 py-2.5 text-xs font-semibold text-brand-navy-800 truncate">
                           {blog.title}
                         </li>
@@ -505,7 +540,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                       Deleted Blogs ({pendingSummary.deletedCount})
                     </span>
                     <ul className="divide-y divide-brand-navy-50 border border-brand-navy-50 rounded-xl overflow-hidden bg-brand-navy-50/20">
-                      {pendingSummary.deleted.map((blog: any) => (
+                      {pendingSummary.deleted.map((blog) => (
                         <li key={blog.id} className="px-4 py-2.5 text-xs font-semibold text-brand-navy-800 truncate line-through opacity-70">
                           {blog.title}
                         </li>
@@ -562,7 +597,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-brand-navy-50 text-[11px] font-semibold text-brand-navy-700">
-                    {deploymentHistory.map((item: any) => (
+                    {deploymentHistory.map((item) => (
                       <tr key={item.id} className="hover:bg-brand-navy-50/20">
                         <td className="py-3 pr-4 whitespace-nowrap text-brand-navy-500">
                           {formatDate(item.date)}

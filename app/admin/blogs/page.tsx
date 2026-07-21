@@ -6,6 +6,9 @@ import Link from "next/link";
 import { getDraftBlogs } from "@/services/draftService";
 import { ArrowLeft, Plus } from "lucide-react";
 import AdminBlogList from "./AdminBlogList";
+import fs from "fs";
+import path from "path";
+import AdminSignOutButton from "@/components/AdminSignOutButton";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +16,7 @@ export default async function AdminBlogsPage() {
   // Check NextAuth session on server
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session || (session as { error?: string })?.error === "RefreshAccessTokenError") {
     redirect("/admin");
   }
 
@@ -23,8 +26,6 @@ export default async function AdminBlogsPage() {
   // Check if a deployment is currently running
   let isDeploymentRunning = false;
   try {
-    const fs = require("fs");
-    const path = require("path");
     const historyPath = path.join(process.cwd(), "data", "deploymentHistory.json");
     if (fs.existsSync(historyPath)) {
       const history = JSON.parse(fs.readFileSync(historyPath, "utf8") || "[]");
@@ -58,20 +59,23 @@ export default async function AdminBlogsPage() {
             </p>
           </div>
 
-          {isDeploymentRunning ? (
-            <div className="inline-flex items-center gap-1.5 px-5 py-3 bg-brand-navy-300 text-brand-navy-500 text-xs font-black rounded-xl cursor-not-allowed select-none">
-              <Plus className="w-4 h-4" />
-              Deployment Active - Creating Disabled
-            </div>
-          ) : (
-            <Link
-              href="/admin/blogs/new"
-              className="inline-flex items-center gap-1.5 px-5 py-3 bg-brand-primary-700 hover:bg-brand-primary-800 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all active:scale-98"
-            >
-              <Plus className="w-4 h-4" />
-              Create New Blog Post
-            </Link>
-          )}
+          <div className="flex items-center gap-3 flex-wrap">
+            {isDeploymentRunning ? (
+              <div className="inline-flex items-center gap-1.5 px-5 py-3 bg-brand-navy-300 text-brand-navy-500 text-xs font-black rounded-xl cursor-not-allowed select-none">
+                <Plus className="w-4 h-4" />
+                Deployment Active - Creating Disabled
+              </div>
+            ) : (
+              <Link
+                href="/admin/blogs/new"
+                className="inline-flex items-center gap-1.5 px-5 py-3 bg-brand-primary-700 hover:bg-brand-primary-800 text-xs font-black text-white rounded-xl shadow-sm hover:shadow transition-all active:scale-98"
+              >
+                <Plus className="w-4 h-4" />
+                Create New Blog Post
+              </Link>
+            )}
+            <AdminSignOutButton />
+          </div>
         </div>
 
         {/* Banner if deployment is running */}

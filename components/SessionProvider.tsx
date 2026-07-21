@@ -8,5 +8,9 @@ interface SessionProviderProps {
 }
 
 export default function SessionProvider({ children }: SessionProviderProps) {
-  return <NextAuthSessionProvider>{children}</NextAuthSessionProvider>;
+  return (
+    <NextAuthSessionProvider basePath="/api/auth">
+      {children}
+    </NextAuthSessionProvider>
+  );
 }

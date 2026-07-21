@@ -7,8 +7,8 @@ import { authOptions, ExtendedSession } from "@/lib/auth";
 export async function replaceImageAction(oldFileId: string | null, formData: FormData) {
   try {
     const session = (await getServerSession(authOptions)) as ExtendedSession | null;
-    if (!session || !session.accessToken) {
-      throw new Error("Unauthorized. Please authenticate via Google first.");
+    if (!session || !session.accessToken || session.error === "RefreshAccessTokenError") {
+      throw new Error("Unauthorized. Google authentication session has expired. Please log in again.");
     }
 
     const file = formData.get("file") as File | null;
