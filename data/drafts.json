@@ -66,7 +66,7 @@
     "keywords": [],
     "publishedDate": "2026-06-28",
     "readingTime": "1 min read",
-    "status": "published",
+    "status": "pending_delete",
     "content": "demo content"
   },
   {
@@ -80,7 +80,7 @@
     "keywords": [],
     "publishedDate": "2026-06-29",
     "readingTime": "1 min read",
-    "status": "pending_delete",
+    "status": "published",
     "content": "demo title today blog description"
   },
   {
@@ -150,7 +150,7 @@
     "keywords": [],
     "publishedDate": "2026-07-21",
     "readingTime": "1 min read",
-    "status": "pending_delete",
+    "status": "published",
     "content": "this is today's 2nd blog"
   }
 ]
