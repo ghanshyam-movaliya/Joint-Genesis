@@ -112,20 +112,6 @@
     "content": "this is today's blog "
   },
   {
-    "id": "blog_1784657967334",
-    "slug": "21st-july-blog",
-    "title": "21st july blog",
-    "author": "Editorial Team",
-    "image": "https://lh3.googleusercontent.com/d/1QfXq-SJ69OyF05nSZrvvMAz_mhS3z9g6",
-    "seoTitle": "21st july blog",
-    "seoDescription": "21st july blog",
-    "keywords": [],
-    "publishedDate": "2026-07-21",
-    "readingTime": "1 min read",
-    "status": "published",
-    "content": "today's blog"
-  },
-  {
     "id": "blog_1784659176411",
     "slug": "2nd-blog",
     "title": "2nd blog",
