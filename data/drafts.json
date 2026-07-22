@@ -94,7 +94,7 @@
     "keywords": [],
     "publishedDate": "2026-06-30",
     "readingTime": "1 min read",
-    "status": "published",
+    "status": "pending_delete",
     "content": "sfdsa"
   },
   {
@@ -108,7 +108,7 @@
     "keywords": [],
     "publishedDate": "2026-07-05",
     "readingTime": "1 min read",
-    "status": "pending_delete",
+    "status": "published",
     "content": "first blog of july 2026"
   },
   {
@@ -136,7 +136,7 @@
     "keywords": [],
     "publishedDate": "2026-07-21",
     "readingTime": "1 min read",
-    "status": "pending_delete",
+    "status": "published",
     "content": "today's blog"
   },
   {
