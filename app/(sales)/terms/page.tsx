@@ -2,48 +2,64 @@ import React from "react";
 import type { Metadata } from "next";
 import { CONFIG } from "@/lib/config";
 
+import { BreadcrumbSchema, WebPageSchema } from "@/lib/schema";
+
 export const metadata: Metadata = {
-  title: "Terms and Conditions | Joint Genesis™",
+  title: "Terms and Conditions | Joint Genesis™ Official Site",
   description: "Read the Terms and Conditions for utilizing the Joint Genesis™ website and products.",
   keywords: ["Terms and Conditions", "Joint Genesis terms", "legal agreement"],
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsAndConditionsPage() {
   const domainName = CONFIG.domain.replace("https://", "");
+  const breadcrumbItems = [
+    { name: "Home", url: "/" },
+    { name: "Terms and Conditions", url: "/terms" },
+  ];
 
   return (
-    <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-primary-50/30 via-white to-brand-navy-50/20 min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header */}
-        <div className="text-center mb-12">
-          <span className="inline-flex px-3 py-1 rounded-full text-[10px] font-black text-brand-primary-700 bg-brand-primary-50 border border-brand-primary-100 uppercase tracking-widest mb-4">
-            Legal Agreement
-          </span>
-          <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-brand-navy-900 leading-tight tracking-tight">
-            Terms and Conditions
-          </h1>
-          <p className="text-xs sm:text-sm text-brand-navy-500 mt-2 font-bold uppercase tracking-wider">
-            Joint Genesis™
-          </p>
-        </div>
-
-        {/* Content Box */}
-        <div className="bg-white border border-brand-navy-100 rounded-[32px] p-6 sm:p-10 md:p-12 shadow-sm text-brand-navy-700 text-sm sm:text-base leading-relaxed flex flex-col gap-8">
+    <>
+      <BreadcrumbSchema items={breadcrumbItems} />
+      <WebPageSchema
+        name="Terms and Conditions | Joint Genesis™"
+        description="Official Terms and Conditions for Joint Genesis."
+        url="/terms"
+      />
+      <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-primary-50/30 via-white to-brand-navy-50/20 min-h-screen">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <p>
-            These terms and conditions outline the rules and regulations for the use of Joint Genesis™ Website {domainName} By accessing this website we assume you accept these terms and conditions. Do not continue to use Joint Genesis™ if you do not agree to take all of the terms and conditions stated on this page.
-          </p>
-
-          <div className="h-px bg-brand-navy-100/80 my-2" />
-
-          <div>
-            <h2 className="font-display font-bold text-lg sm:text-xl text-brand-navy-900 mb-3">
-              1. Product Information
-            </h2>
-            <p className="mb-4">
-              Joint Genesis™ is a natural, dietary supplement designed to support healthy sleep &amp; Weight Loss patterns and promote relaxation using science-backed, plant-based ingredients. It is not intended to diagnose, treat, cure, or prevent any disease. The statements made on this website have not been evaluated by the Food and Drug Administration (FDA).
+          {/* Header */}
+          <div className="text-center mb-12">
+            <span className="inline-flex px-3 py-1 rounded-full text-[10px] font-black text-brand-primary-700 bg-brand-primary-50 border border-brand-primary-100 uppercase tracking-widest mb-4">
+              Legal Agreement
+            </span>
+            <h1 className="font-display font-extrabold text-3xl sm:text-4xl text-brand-navy-900 leading-tight tracking-tight">
+              Terms and Conditions
+            </h1>
+            <p className="text-xs sm:text-sm text-brand-navy-500 mt-2 font-bold uppercase tracking-wider">
+              Joint Genesis™
             </p>
+          </div>
+
+          {/* Content Box */}
+          <div className="bg-white border border-brand-navy-100 rounded-[32px] p-6 sm:p-10 md:p-12 shadow-sm text-brand-navy-700 text-sm sm:text-base leading-relaxed flex flex-col gap-8">
+            
+            <p>
+              These terms and conditions outline the rules and regulations for the use of Joint Genesis™ Website {domainName}. By accessing this website we assume you accept these terms and conditions. Do not continue to use Joint Genesis™ if you do not agree to take all of the terms and conditions stated on this page.
+            </p>
+
+            <div className="h-px bg-brand-navy-100/80 my-2" />
+
+            <div>
+              <h2 className="font-display font-bold text-lg sm:text-xl text-brand-navy-900 mb-3">
+                1. Product Information
+              </h2>
+              <p className="mb-4">
+                Joint Genesis™ is a natural dietary supplement designed to support healthy joint mobility, flexibility, and synovial fluid lubrication using science-backed plant-based ingredients. It is not intended to diagnose, treat, cure, or prevent any disease. The statements made on this website have not been evaluated by the Food and Drug Administration (FDA).
+              </p>
             <p>
               Results may vary from person to person based on factors like age, health status, lifestyle, and diet. Please read all product labels and usage instructions carefully before use.
             </p>
@@ -153,5 +169,6 @@ export default function TermsAndConditionsPage() {
 
       </div>
     </section>
+    </>
   );
 }

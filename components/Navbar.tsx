@@ -8,10 +8,11 @@ import { cn } from "@/lib/utils";
 import { useAffiliateUrl } from "@/lib/settingsContext";
 
 const NAV_LINKS = [
-  { href: "/#", label: "Home" },
-  { href: "/#about", label: "About" },
+  { href: "/", label: "Home" },
+  { href: "/joint-genesis-review", label: "Review" },
+  { href: "/joint-genesis-benefits", label: "Benefits" },
+  { href: "/joint-genesis-side-effects", label: "Safety" },
   { href: "/#ingredients", label: "Ingredients" },
-  { href: "/#benefits", label: "Benefits" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/blog", label: "Blog" },
   { href: "/#faqs", label: "FAQs" },
@@ -125,7 +126,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="cursor-pointer inline-flex items-center justify-center p-2 rounded-xl text-brand-navy-700 hover:text-brand-primary-700 hover:bg-brand-navy-100/50 transition-colors"
-              aria-expanded="false"
+              aria-expanded={isOpen}
               aria-label="Toggle main menu"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

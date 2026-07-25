@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { ClipboardList, Shield } from "lucide-react";
 
 export default function SupplementFacts() {
@@ -31,9 +32,12 @@ export default function SupplementFacts() {
 
         {/* Center: Actual Supplement Label Image (Framed beautifully) */}
         <div className="w-full max-w-md bg-brand-navy-50/50 border border-brand-navy-100 rounded-[32px] p-6 sm:p-8 flex justify-center shadow-md">
-          <img 
+          <Image 
             src="/images/joint genesis-image/Joint Genesis Supplement Facts/label_jointgenesis.jpg" 
-            alt="Joint Genesis Supplement Facts Label" 
+            alt="Joint Genesis Official Supplement Facts Nutrition Label" 
+            width={340}
+            height={400}
+            sizes="(max-width: 768px) 100vw, 340px"
             className="rounded-2xl max-h-[300px] sm:max-h-[360px] w-auto object-contain shadow-lg border border-brand-navy-100/40 hover:scale-102 transition-transform duration-300"
           />
         </div>
@@ -56,9 +60,11 @@ export default function SupplementFacts() {
 
           {/* Quality badges */}
           <div className="flex gap-4 items-start bg-brand-navy-50/30 border border-brand-navy-100/50 rounded-2xl p-5 shadow-sm">
-            <img 
+            <Image 
               src="/images/joint genesis-image/Joint Genesis Supplement Facts/cGMP_symbol.png" 
-              alt="cGMP Certified Symbol" 
+              alt="cGMP Certified Manufacturing Symbol" 
+              width={64}
+              height={64}
               className="w-16 h-auto object-contain shrink-0 drop-shadow-sm mt-1"
             />
             <div>

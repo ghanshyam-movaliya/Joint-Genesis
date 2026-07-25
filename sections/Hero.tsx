@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion, Variants } from "framer-motion";
+import Image from "next/image";
 import { ArrowRight, Star, ShieldCheck, CheckCircle2, Leaf } from "lucide-react";
 import { useAffiliateUrl } from "@/lib/settingsContext";
 import { cn } from "@/lib/utils";
@@ -139,9 +140,13 @@ export default function Hero() {
               {/* Radial glow background */}
               <div className="absolute inset-0 bg-brand-primary-600/10 blur-3xl rounded-full scale-90 pointer-events-none" />
               
-              <img
+              <Image
                 src="/images/joint genesis-image/MAIN HEADING (HERO SECTION)/hero.png"
-                alt="Joint Genesis supplement bottles"
+                alt="Joint Genesis Doctor Formulated Supplement Bottles"
+                width={420}
+                height={500}
+                priority
+                sizes="(max-width: 768px) 100vw, 420px"
                 className="w-full h-auto object-contain relative z-10 drop-shadow-2xl hover:scale-102 transition-transform duration-300"
               />
 

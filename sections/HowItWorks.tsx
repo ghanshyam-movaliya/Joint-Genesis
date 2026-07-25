@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useAffiliateUrl } from "@/lib/settingsContext";
 import { cn } from "@/lib/utils";
@@ -78,9 +79,11 @@ export default function HowItWorks() {
                 {`0${idx + 1}`}
               </div>
 
-              <img
+              <Image
                 src={step.image}
                 alt={step.title}
+                width={80}
+                height={80}
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border border-brand-navy-100 shadow-sm shrink-0 relative z-10"
               />
               <div className="flex flex-col gap-2 relative z-10">

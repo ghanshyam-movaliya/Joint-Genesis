@@ -66,8 +66,10 @@ export default function FAQ() {
                 {/* Accordion Header Button */}
                 <button
                   onClick={() => toggleFaq(faq.id)}
-                  className="flex items-center justify-between text-left w-full px-6 py-5 focus:outline-none cursor-pointer"
+                  id={`faq-btn-${faq.id}`}
+                  aria-controls={`faq-answer-${faq.id}`}
                   aria-expanded={isOpen}
+                  className="flex items-center justify-between text-left w-full px-6 py-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary-600 rounded-2xl cursor-pointer"
                 >
                   <span className="font-display font-extrabold text-sm sm:text-base text-brand-navy-900 pr-4">
                     {faq.question}
@@ -86,6 +88,9 @@ export default function FAQ() {
                 <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
+                      id={`faq-answer-${faq.id}`}
+                      role="region"
+                      aria-labelledby={`faq-btn-${faq.id}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}

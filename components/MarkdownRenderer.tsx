@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface MarkdownRendererProps {
   content: string;
@@ -257,11 +258,14 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
           const altText = match[1];
           const url = match[2];
           blocks.push(
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
+            <Image
               key={key}
               src={url}
-              alt={altText}
+              alt={altText || "Joint Genesis Article Image"}
+              width={800}
+              height={460}
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, 800px"
               className="rounded-[32px] object-cover w-full max-h-[460px] my-8 shadow-md border border-brand-navy-100"
             />
           );

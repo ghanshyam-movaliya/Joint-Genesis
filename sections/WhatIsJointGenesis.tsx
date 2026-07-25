@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ShieldCheck, Heart, CheckCircle2 } from "lucide-react";
 
 export default function WhatIsJointGenesis() {
@@ -50,9 +51,12 @@ export default function WhatIsJointGenesis() {
             <div className="relative bg-gradient-to-tr from-brand-navy-50 to-brand-primary-50 border border-brand-navy-100 rounded-[32px] p-6 shadow-sm flex justify-center items-center overflow-hidden min-h-[220px]">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/60 via-transparent to-transparent pointer-events-none" />
               
-              <img
+              <Image
                 src="/images/joint genesis-image/What Is Joint Genesis/bottle joint geneis.webp"
-                alt="Joint Genesis Bottle"
+                alt="Joint Genesis Bottle Supplement"
+                width={200}
+                height={200}
+                sizes="(max-width: 768px) 100vw, 200px"
                 className="max-h-[160px] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300 relative z-10"
               />
             </div>

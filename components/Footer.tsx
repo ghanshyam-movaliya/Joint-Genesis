@@ -31,17 +31,27 @@ export default function Footer() {
           {/* Quick Links */}
           <div className="flex flex-col gap-4">
             <h3 className="font-display text-sm font-bold text-white uppercase tracking-wider">
-              Product Info
+              Product & SEO Guides
             </h3>
             <ul className="flex flex-col gap-2.5 text-sm">
               <li>
-                <Link href="/#about" className="hover:text-brand-primary-400 transition-colors">
-                  About the Formula
+                <Link href="/joint-genesis-review" className="hover:text-brand-primary-400 transition-colors">
+                  Joint Genesis Review (2026)
                 </Link>
               </li>
               <li>
-                <Link href="/#benefits" className="hover:text-brand-primary-400 transition-colors">
-                  Health Benefits
+                <Link href="/joint-genesis-benefits" className="hover:text-brand-primary-400 transition-colors">
+                  Joint Genesis Benefits & Science
+                </Link>
+              </li>
+              <li>
+                <Link href="/joint-genesis-side-effects" className="hover:text-brand-primary-400 transition-colors">
+                  Side Effects & Safety Analysis
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="hover:text-brand-primary-400 transition-colors">
+                  Joint Health Blog & Guides
                 </Link>
               </li>
               <li>
@@ -51,7 +61,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/#pricing" className="hover:text-brand-primary-400 transition-colors">
-                  Pricing & Offers
+                  Pricing & Special Offers
                 </Link>
               </li>
               <li>

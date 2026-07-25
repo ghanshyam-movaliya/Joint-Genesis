@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { FlaskConical, ArrowRight } from "lucide-react";
 import { useAffiliateUrl } from "@/lib/settingsContext";
 import { cn } from "@/lib/utils";
@@ -78,9 +79,12 @@ export default function Ingredients() {
             >
               {/* Ingredient Image Thumbnail */}
               <div className="relative w-full h-44 rounded-2xl bg-brand-navy-50/50 border border-brand-navy-100/50 overflow-hidden flex justify-center items-center">
-                <img
+                <Image
                   src={ing.image}
                   alt={ing.name}
+                  width={200}
+                  height={144}
+                  sizes="(max-width: 768px) 100vw, 200px"
                   className="h-36 w-auto object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
                 />
                 

@@ -2,17 +2,33 @@ import React from "react";
 import type { Metadata } from "next";
 import { CONFIG } from "@/lib/config";
 
+import { BreadcrumbSchema, WebPageSchema } from "@/lib/schema";
+
 export const metadata: Metadata = {
-  title: "Disclaimer | Joint Genesis™",
+  title: "Disclaimer | Joint Genesis™ Official Site",
   description: "Read the Disclaimer statement for Joint Genesis™. Learn about informational use and affiliate disclosures.",
   keywords: ["Disclaimer", "Joint Genesis disclaimer", "affiliate disclosure"],
+  alternates: {
+    canonical: "/disclaimer",
+  },
 };
 
 export default function DisclaimerPage() {
   const domainName = CONFIG.domain.replace("https://", "");
+  const breadcrumbItems = [
+    { name: "Home", url: "/" },
+    { name: "Disclaimer", url: "/disclaimer" },
+  ];
 
   return (
-    <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-primary-50/30 via-white to-brand-navy-50/20 min-h-screen">
+    <>
+      <BreadcrumbSchema items={breadcrumbItems} />
+      <WebPageSchema
+        name="Disclaimer | Joint Genesis™"
+        description="Official Disclaimer and affiliate disclosure statement."
+        url="/disclaimer"
+      />
+      <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-primary-50/30 via-white to-brand-navy-50/20 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -86,5 +102,6 @@ export default function DisclaimerPage() {
 
       </div>
     </section>
+    </>
   );
 }

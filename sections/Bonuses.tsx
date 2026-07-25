@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Gift, ArrowRight } from "lucide-react";
 import { useAffiliateUrl } from "@/lib/settingsContext";
 import { cn } from "@/lib/utils";
@@ -76,17 +77,21 @@ export default function Bonuses() {
             {/* Visual Ebooks Group Photos */}
             <div className="mt-6 flex flex-wrap gap-4 max-w-lg">
               <div className="border border-brand-navy-100 rounded-3xl p-3 bg-brand-navy-50/50 flex justify-center items-center shadow-sm w-[200px] shrink-0">
-                <img 
+                <Image 
                   src="/images/joint genesis-image/Get 2 FREE Digital Bonuses/Exclusive-Bonuses-with-Joint-Genesis-copy.png" 
-                  alt="Joint Genesis Exclusive Bonuses Banner" 
-                  className="rounded-2xl max-h-[140px] object-contain hover:scale-102 transition-transform duration-300"
+                  alt="Joint Genesis Exclusive Digital Bonuses Banner" 
+                  width={180}
+                  height={140}
+                  className="rounded-2xl max-h-[140px] w-auto object-contain hover:scale-102 transition-transform duration-300"
                 />
               </div>
               <div className="border border-brand-navy-100 rounded-3xl p-3 bg-brand-navy-50/50 flex justify-center items-center shadow-sm w-[200px] shrink-0">
-                <img 
+                <Image 
                   src="/images/joint genesis-image/Get 2 FREE Digital Bonuses/bonus.png" 
-                  alt="Joint Genesis Ebooks Pack" 
-                  className="rounded-2xl max-h-[140px] object-contain hover:scale-102 transition-transform duration-300"
+                  alt="Joint Genesis Free Bonus Ebooks Pack" 
+                  width={180}
+                  height={140}
+                  className="rounded-2xl max-h-[140px] w-auto object-contain hover:scale-102 transition-transform duration-300"
                 />
               </div>
             </div>
@@ -101,9 +106,11 @@ export default function Bonuses() {
               >
                 {/* Book Cover Image */}
                 <div className="w-40 h-56 rounded-2xl shadow-lg relative overflow-hidden group-hover:scale-102 transition-transform duration-300 border border-brand-navy-100 bg-white">
-                  <img
+                  <Image
                     src={bonus.image}
                     alt={bonus.title}
+                    fill
+                    sizes="160px"
                     className="w-full h-full object-cover rounded-2xl"
                   />
                   {/* Floating FREE Badge */}

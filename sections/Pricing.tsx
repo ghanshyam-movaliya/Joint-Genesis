@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Check, Shield, AlertCircle } from "lucide-react";
 import { CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
@@ -88,8 +89,8 @@ export default function Pricing() {
                   )}
 
                   {/* Package Bottle Image */}
-                  <div className="my-4 flex justify-center items-center h-28 w-full">
-                    <img 
+                  <div className="my-4 flex justify-center items-center h-28 w-full relative">
+                    <Image 
                       src={
                         pkg.id === "2-bottles" 
                           ? "/images/joint genesis-image/Limited Time Special Offer - Act Now !/2-pack.png" 
@@ -97,8 +98,10 @@ export default function Pricing() {
                           ? "/images/joint genesis-image/Limited Time Special Offer - Act Now !/3-pack.png" 
                           : "/images/joint genesis-image/Limited Time Special Offer - Act Now !/6-pack.png"
                       } 
-                      alt={pkg.name} 
-                      className="h-full object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
+                      alt={`Joint Genesis ${pkg.name} Package`} 
+                      width={140}
+                      height={112}
+                      className="max-h-24 w-auto object-contain hover:scale-105 transition-transform duration-300 drop-shadow-md"
                     />
                   </div>
                   

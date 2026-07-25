@@ -2,17 +2,33 @@ import React from "react";
 import type { Metadata } from "next";
 import { CONFIG } from "@/lib/config";
 
+import { BreadcrumbSchema, WebPageSchema } from "@/lib/schema";
+
 export const metadata: Metadata = {
-  title: "Privacy Policy | Joint Genesis™",
+  title: "Privacy Policy | Joint Genesis™ Official Site",
   description: "Read the Privacy Policy for Joint Genesis™. Learn how we collect, use, and protect your information when visiting our website.",
   keywords: ["Privacy Policy", "Joint Genesis privacy", "data protection"],
+  alternates: {
+    canonical: "/privacy-policy",
+  },
 };
 
 export default function PrivacyPolicyPage() {
   const domainName = CONFIG.domain.replace("https://", "");
+  const breadcrumbItems = [
+    { name: "Home", url: "/" },
+    { name: "Privacy Policy", url: "/privacy-policy" },
+  ];
 
   return (
-    <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-primary-50/30 via-white to-brand-navy-50/20 min-h-screen">
+    <>
+      <BreadcrumbSchema items={breadcrumbItems} />
+      <WebPageSchema
+        name="Privacy Policy | Joint Genesis™"
+        description="Official Privacy Policy for Joint Genesis."
+        url="/privacy-policy"
+      />
+      <section className="relative pt-32 pb-24 bg-gradient-to-b from-brand-primary-50/30 via-white to-brand-navy-50/20 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -129,5 +145,6 @@ export default function PrivacyPolicyPage() {
 
       </div>
     </section>
+    </>
   );
 }

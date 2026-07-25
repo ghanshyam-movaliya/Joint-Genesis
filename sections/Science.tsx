@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Award, ShieldCheck, Heart, Sparkles, Activity, ArrowRight } from "lucide-react";
 import { useAffiliateUrl } from "@/lib/settingsContext";
 import { cn } from "@/lib/utils";
@@ -80,16 +81,22 @@ export default function Science() {
             {/* Science Diagrams */}
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white border border-brand-navy-100 rounded-3xl p-3 flex justify-center items-center shadow-sm">
-                <img 
+                <Image 
                   src="/images/joint genesis-image/The Science Behind Joint Genesis/daigrma joint genesis.webp" 
-                  alt="Joint lubrication diagram" 
+                  alt="Joint Lubrication & Synovial Fluid Diagram" 
+                  width={280}
+                  height={180}
+                  sizes="(max-width: 768px) 100vw, 280px"
                   className="rounded-2xl max-h-[180px] w-auto object-contain hover:scale-102 transition-transform duration-300"
                 />
               </div>
               <div className="bg-white border border-brand-navy-100 rounded-3xl p-3 flex justify-center items-center shadow-sm">
-                <img 
+                <Image 
                   src="/images/joint genesis-image/The Science Behind Joint Genesis/diagram.jpg" 
-                  alt="Synovial fluid research diagram" 
+                  alt="Synovial Fluid Hyaluronan Research Diagram" 
+                  width={280}
+                  height={180}
+                  sizes="(max-width: 768px) 100vw, 280px"
                   className="rounded-2xl max-h-[180px] w-auto object-contain hover:scale-102 transition-transform duration-300"
                 />
               </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { CONFIG } from "@/lib/config";
 
 export default function Guarantee() {
@@ -14,9 +15,12 @@ export default function Guarantee() {
             {/* Guarantee Badge Image */}
             <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
               <div className="absolute inset-0 bg-brand-accent-600/10 blur-xl rounded-full animate-pulse" />
-              <img
+              <Image
                 src="/images/joint genesis-image/Your Mobility Guaranteed For 180 FULL DAYS/guarantee-badge-180-days.webp"
-                alt="180 Day Money Back Guarantee"
+                alt="180 Day Money Back Guarantee Seal"
+                width={224}
+                height={224}
+                sizes="(max-width: 768px) 192px, 224px"
                 className="w-full h-full object-contain relative z-10 drop-shadow-xl hover:scale-105 transition-transform duration-300"
               />
             </div>

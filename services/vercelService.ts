@@ -26,9 +26,9 @@ export async function getLatestDeploymentStatus(commitSha: string): Promise<Verc
       if (fs.existsSync(deploymentHistoryFilePath)) {
         const rawHistory = fs.readFileSync(deploymentHistoryFilePath, "utf8");
         const history = JSON.parse(rawHistory || "[]");
-        const record = history.find((h: any) => h.commitSha === commitSha);
+        const record = history.find((h: { commitSha?: string; date?: string }) => h.commitSha === commitSha);
         if (record) {
-          const startTime = new Date(record.date).getTime();
+          const startTime = new Date(record.date || Date.now()).getTime();
           const elapsed = Date.now() - startTime;
 
           if (elapsed < 4000) {
@@ -72,7 +72,7 @@ export async function getLatestDeploymentStatus(commitSha: string): Promise<Verc
     const deployments = data.deployments || [];
 
     // Find the deployment that corresponds to our pushed commit SHA
-    const targetDeployment = deployments.find((d: any) => {
+    const targetDeployment = deployments.find((d: { meta?: { githubCommitSha?: string; commitSha?: string }; state?: VercelStatusResponse["state"]; ready?: number; created?: number; uid?: string; url?: string }) => {
       // Vercel deployment metadata stores the commit SHA
       const metaSha = d.meta?.githubCommitSha || d.meta?.commitSha;
       return metaSha && metaSha.toLowerCase() === commitSha.toLowerCase();
