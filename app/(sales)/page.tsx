@@ -26,11 +26,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Joint Genesis™ | Support Rejuvenated Joint Comfort & Mobility",
     description: "Doctor-formulated supplement that targets age-related joint decay by supporting healthy synovial fluid.",
-    url: "https://en-jointgenesis.com",
+    url: "https://www.jointgeneshis.com",
     type: "website",
     images: [
       {
-        url: "https://en-jointgenesis.com/images/joint genesis-image/MAIN HEADING (HERO SECTION)/hero.png",
+        url: "https://www.jointgeneshis.com/images/joint genesis-image/MAIN HEADING (HERO SECTION)/hero.png",
         width: 1200,
         height: 630,
         alt: "Joint Genesis Supplement Bottle",

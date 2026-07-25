@@ -40,7 +40,7 @@ Open your `.env.local` file (create it in the project root if it does not exist)
 
 ```env
 # Production Site URL (used for absolute metadata fallbacks)
-NEXT_PUBLIC_SITE_URL=https://en-jointgenesis.com
+NEXT_PUBLIC_SITE_URL=https://www.jointgeneshis.com
 ```
 
 ---

@@ -7,7 +7,7 @@ import { BreadcrumbSchema, WebPageSchema } from "@/lib/schema";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
-  const baseUrl = settings.websiteUrl || "https://en-jointgenesis.com";
+  const baseUrl = settings.websiteUrl || "https://www.jointgeneshis.com";
 
   return {
     title: "Joint Genesis™ Official Blog | Mobility & Joint Health Guides",

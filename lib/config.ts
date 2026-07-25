@@ -1,6 +1,6 @@
 export const CONFIG = {
   siteName: "Joint Genesis™",
-  domain: "https://en-jointgenesis.com",
+  domain: "https://www.jointgeneshis.com",
   supportEmail: "support@biodynamix.co",
   supportPhone: "1-800-473-5188",
   supportAddress: "BioDynamix, 285 Northeast Ave, Tallmadge, OH 44278",

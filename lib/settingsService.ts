@@ -23,11 +23,11 @@ const settingsFilePath = path.join(process.cwd(), "data", "settings.json");
 
 const DEFAULT_SETTINGS: WebsiteSettings = {
   websiteName: "Joint Genesis™",
-  domain: "en-jointgenesis.com",
+  domain: "www.jointgeneshis.com",
   affiliateLink: "",
   supportEmail: "support@biodynamix.co",
   supportPhone: "1-800-473-5188",
-  websiteUrl: "https://en-jointgenesis.com",
+  websiteUrl: "https://www.jointgeneshis.com",
   footerText: "Copyright 2026 - Joint Genesis™ All Rights Reserved.",
   defaultAuthor: "Dr. Mark Weis",
   googleVerification: "",

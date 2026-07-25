@@ -4,7 +4,7 @@ import { getSettings } from "@/lib/settingsService";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const settings = await getSettings();
-  const baseUrl = settings.websiteUrl || "https://en-jointgenesis.com";
+  const baseUrl = settings.websiteUrl || "https://www.jointgeneshis.com";
 
   // Static public pages
   const staticRoutes: MetadataRoute.Sitemap = [

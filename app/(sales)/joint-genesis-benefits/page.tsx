@@ -29,11 +29,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Joint Genesis Benefits: Complete Joint Lubrication & Flexibility Guide",
     description: "Discover how Joint Genesis restores thick synovial fluid and rejuvenates joint mobility after 40.",
-    url: "https://en-jointgenesis.com/joint-genesis-benefits",
+    url: "https://www.jointgeneshis.com/joint-genesis-benefits",
     type: "article",
     images: [
       {
-        url: "https://en-jointgenesis.com/images/joint genesis-image/The Science Behind Joint Genesis/daigrma joint genesis.webp",
+        url: "https://www.jointgeneshis.com/images/joint genesis-image/The Science Behind Joint Genesis/daigrma joint genesis.webp",
         width: 1200,
         height: 630,
         alt: "Synovial Fluid Cushioning Diagram",

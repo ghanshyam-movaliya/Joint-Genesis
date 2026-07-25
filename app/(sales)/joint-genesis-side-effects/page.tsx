@@ -26,11 +26,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Joint Genesis Side Effects & Safety Audit",
     description: "Detailed safety analysis of Joint Genesis. Ingredients, purity testing, dosage recommendations, and allergen breakdown.",
-    url: "https://en-jointgenesis.com/joint-genesis-side-effects",
+    url: "https://www.jointgeneshis.com/joint-genesis-side-effects",
     type: "article",
     images: [
       {
-        url: "https://en-jointgenesis.com/images/joint genesis-image/MAIN HEADING (HERO SECTION)/hero.png",
+        url: "https://www.jointgeneshis.com/images/joint genesis-image/MAIN HEADING (HERO SECTION)/hero.png",
         width: 1200,
         height: 630,
         alt: "Joint Genesis Safety & Bottle Mockup",

@@ -29,11 +29,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Joint Genesis Review (2026): Is It Worth Buying?",
     description: "In-depth review of Joint Genesis by BioDynamix. Ingredients, clinical proof, real customer results, and where to buy at the best price.",
-    url: "https://en-jointgenesis.com/joint-genesis-review",
+    url: "https://www.jointgeneshis.com/joint-genesis-review",
     type: "article",
     images: [
       {
-        url: "https://en-jointgenesis.com/images/joint genesis-image/MAIN HEADING (HERO SECTION)/hero.png",
+        url: "https://www.jointgeneshis.com/images/joint genesis-image/MAIN HEADING (HERO SECTION)/hero.png",
         width: 1200,
         height: 630,
         alt: "Joint Genesis Supplement Review Bottle",

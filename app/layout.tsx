@@ -23,7 +23,7 @@ const inter = Inter({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
-  const baseUrl = settings.websiteUrl || "https://en-jointgenesis.com";
+  const baseUrl = settings.websiteUrl || "https://www.jointgeneshis.com";
   
   return {
     metadataBase: new URL(baseUrl),
