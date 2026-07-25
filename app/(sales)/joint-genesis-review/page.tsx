@@ -9,7 +9,6 @@ import Guarantee from "@/sections/Guarantee";
 import FAQ from "@/sections/FAQ";
 import Testimonials from "@/sections/Testimonials";
 import SupplementFacts from "@/sections/SupplementFacts";
-import InternalLinkBanner from "@/components/InternalLinkBanner";
 import { BreadcrumbSchema, ProductSchema, ReviewSchema, FAQSchema, WebPageSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
@@ -184,9 +183,6 @@ export default function JointGenesisReviewPage() {
               </Link>
             </div>
           </div>
-
-          {/* Related Links */}
-          <InternalLinkBanner currentPath="/joint-genesis-review" />
 
         </div>
       </article>

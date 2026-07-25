@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, Clock, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 interface PostCardProps {
   post: {
@@ -17,12 +17,6 @@ interface PostCardProps {
 }
 
 export default function BlogCard({ post }: PostCardProps) {
-  const formattedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
   return (
     <article className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-brand-navy-100/60 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
       {/* Article Image */}
@@ -41,23 +35,10 @@ export default function BlogCard({ post }: PostCardProps) {
             Joint Genesis™ Blog
           </div>
         )}
-
       </div>
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-6">
-        {/* Meta Info */}
-        <div className="flex items-center gap-4 text-xs font-bold text-brand-navy-400 mb-3">
-          <span className="flex items-center gap-1">
-            <Calendar className="w-3.5 h-3.5" />
-            {formattedDate}
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" />
-            {post.readingTime || "5 min read"}
-          </span>
-        </div>
-
         {/* Title */}
         <h3 className="font-display font-extrabold text-lg text-brand-navy-900 leading-tight group-hover:text-brand-primary-700 transition-colors duration-200 mb-2 line-clamp-2">
           <Link href={`/blog/${post.slug}`} className="focus:outline-none">

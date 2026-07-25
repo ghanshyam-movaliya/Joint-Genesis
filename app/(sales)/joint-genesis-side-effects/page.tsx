@@ -6,7 +6,6 @@ import SupplementFacts from "@/sections/SupplementFacts";
 import FAQ from "@/sections/FAQ";
 import Pricing from "@/sections/Pricing";
 import Guarantee from "@/sections/Guarantee";
-import InternalLinkBanner from "@/components/InternalLinkBanner";
 import { BreadcrumbSchema, ProductSchema, FAQSchema, WebPageSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
@@ -151,8 +150,6 @@ export default function JointGenesisSideEffectsPage() {
               </p>
             </div>
           </div>
-
-          <InternalLinkBanner currentPath="/joint-genesis-side-effects" />
 
         </div>
       </article>

@@ -3,14 +3,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Calendar, Clock, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
-import { getBlogBySlug, getRelatedPosts } from "@/lib/blogService";
+import { getBlogBySlug } from "@/lib/blogService";
 import ShareButtons from "@/components/ShareButtons";
-import BlogCard from "@/components/BlogCard";
 import TOC from "@/components/TOC";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
-import InternalLinkBanner from "@/components/InternalLinkBanner";
 import { BreadcrumbSchema, BlogSchema } from "@/lib/schema";
 
 interface PageProps {
@@ -89,14 +87,6 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
-  const relatedPosts = await getRelatedPosts(post.slug);
-
-  const formattedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
   // Extract headings from the loaded markdown content
   const headings = extractHeadingsFromMarkdown(post.content || "");
 
@@ -139,26 +129,14 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
 
           {/* Article Title Header */}
-          <header className="max-w-4xl mx-auto text-center lg:text-left mb-12 flex flex-col gap-4">
+          <header className="max-w-4xl mx-auto text-center lg:text-left mb-8 flex flex-col gap-3">
             <h1 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-brand-navy-900 leading-tight tracking-tight">
               {post.title}
             </h1>
-
-            {/* Date Meta block */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs font-bold text-brand-navy-500 mt-2 border-y border-brand-navy-100/60 py-4">
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-4 h-4 text-brand-primary-600" />
-                {formattedDate}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-brand-primary-600" />
-                {post.readingTime || "6 min read"}
-              </span>
-            </div>
           </header>
 
-          {/* Featured Image */}
-          <div className="max-w-5xl mx-auto aspect-video w-full relative rounded-3xl overflow-hidden shadow-lg border border-brand-navy-100 mb-16 bg-brand-navy-50">
+          {/* Featured Image (Reduced size) */}
+          <div className="max-w-2xl mx-auto h-64 sm:h-80 w-full relative rounded-2xl overflow-hidden shadow-md border border-brand-navy-100 mb-12 bg-brand-navy-50">
             {post.googleDriveImageUrl ? (
               <Image
                 src={post.googleDriveImageUrl}
@@ -168,7 +146,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 priority
               />
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-brand-primary-50 text-brand-primary-700 font-display font-black text-2xl sm:text-3xl">
+              <div className="absolute inset-0 flex items-center justify-center bg-brand-primary-50 text-brand-primary-700 font-display font-black text-xl sm:text-2xl">
                 Joint Genesis™ Blog
               </div>
             )}
@@ -187,7 +165,6 @@ export default async function BlogPostPage({ params }: PageProps) {
               <div className="prose prose-brand max-w-none">
                 <MarkdownRenderer content={post.content || ""} />
               </div>
-              <InternalLinkBanner currentPath={`/blog/${post.slug}`} />
             </main>
 
             {/* Right Column: Share buttons / Meta */}
@@ -196,20 +173,6 @@ export default async function BlogPostPage({ params }: PageProps) {
             </aside>
 
           </div>
-
-          {/* Related Articles list */}
-          {relatedPosts.length > 0 && (
-            <div className="max-w-6xl mx-auto mt-24 border-t border-brand-navy-100 pt-16">
-              <h2 className="font-display font-extrabold text-2xl text-brand-navy-900 mb-8 text-center lg:text-left">
-                Related Articles You Might Like
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {relatedPosts.map((relatedPost) => (
-                  <BlogCard key={relatedPost.slug} post={relatedPost} />
-                ))}
-              </div>
-            </div>
-          )}
 
         </div>
       </article>
